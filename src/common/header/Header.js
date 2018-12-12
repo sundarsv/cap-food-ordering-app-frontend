@@ -56,6 +56,9 @@ class Header extends Component {
             lastnameRequired: "dispNone",
             lastname: "",
             emailRequired: "dispNone",
+            isEmailValid: "dispNone",
+            isPassValid: "dispNone",
+            isContactValid: "dispNone",
             email: "",
             registerPasswordRequired: "dispNone",
             registerPassword: "",
@@ -79,6 +82,9 @@ class Header extends Component {
             lastnameRequired: "dispNone",
             lastname: "",
             emailRequired: "dispNone",
+            isEmailValid: "dispNone",
+            isPassValid: "dispNone",
+            isContactValid: "dispNone",
             email: "",
             registerPasswordRequired: "dispNone",
             registerPassword: "",
@@ -131,11 +137,31 @@ class Header extends Component {
     }
 
     registerClickHandler = () => {
+        // let emailPattern = "/^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$/";
+        const passwordRegx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+        const contactRegx = /^[0-9]{10}$/;
+
         this.state.firstname === "" ? this.setState({firstnameRequired: "dispBlock"}) : this.setState({firstnameRequired: "dispNone"});
-        this.state.lastname === "" ? this.setState({lastnameRequired: "dispBlock"}) : this.setState({lastnameRequired: "dispNone"});
-        this.state.email === "" ? this.setState({emailRequired: "dispBlock"}) : this.setState({emailRequired: "dispNone"});
-        this.state.registerPassword === "" ? this.setState({registerPasswordRequired: "dispBlock"}) : this.setState({registerPasswordRequired: "dispNone"});
-        this.state.contact === "" ? this.setState({contactRequired: "dispBlock"}) : this.setState({contactRequired: "dispNone"});
+        // this.state.lastname === "" ? this.setState({lastnameRequired: "dispBlock"}) : this.setState({lastnameRequired: "dispNone"});
+        this.state.email === "" ? this.setState({
+            emailRequired: "dispBlock",
+            isEmailValid: "dispNone"
+        }) : this.state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) ? this.setState({
+            isEmailValid: "dispNone",
+            emailRequired: "dispNone"
+        }) : this.setState({isEmailValid: "dispBlock", emailRequired: "dispNone"});
+
+        this.state.registerPassword === "" ? this.setState({registerPasswordRequired: "dispBlock"}) :
+            this.state.registerPassword.match(passwordRegx) ? this.setState({
+                isPassValid: "dispNone",
+                registerPasswordRequired: "dispNone"
+            }) : this.setState({isPassValid: "dispBlock", registerPasswordRequired: "dispNone"});
+
+        this.state.contact === "" ? this.setState({contactRequired: "dispBlock"}) :
+            this.state.contact.match(contactRegx)? this.setState({
+                isContactValid: "dispNone",
+                contactRequired: "dispNone"
+            }) : this.setState({isContactValid: "dispBlock", contactRequired: "dispNone"});
 
         let dataSignup = JSON.stringify({
             "email_address": this.state.email,
@@ -193,8 +219,8 @@ class Header extends Component {
     render() {
         return (
             <div>
-                    <header className="app-header">
-                    <Grid container >
+                <header className="app-header">
+                    <Grid container>
                         <Grid item sm={3} xs={12}>
                             <IconButton color="inherit" aria-label="Open drawer">
                                 <Fastfood/>
@@ -202,10 +228,10 @@ class Header extends Component {
                         </Grid>
                         <Grid item sm={3} xs={12}>
                             <div className="searchIcon">
-                                <SearchIcon />
+                                <SearchIcon/>
                             </div>
                             <Input className="inputInput"
-                                placeholder="Search by Restaurant Name"
+                                   placeholder="Search by Restaurant Name"
                             />
                         </Grid>
                         <Grid item sm={3} xs={12}>
@@ -230,7 +256,7 @@ class Header extends Component {
                             }
                         </Grid>
                     </Grid>
-                    </header>
+                </header>
                 <Modal
                     ariaHideApp={false}
                     isOpen={this.state.modalIsOpen}
@@ -239,15 +265,15 @@ class Header extends Component {
                     style={customStyles}
                 >
                     <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}>
-                        <Tab label="Login"/>
-                        <Tab label="Register"/>
+                        <Tab label="LOGIN"/>
+                        <Tab label="SIGNUP"/>
                     </Tabs>
 
                     {this.state.value === 0 &&
                     <TabContainer>
                         <FormControl required>
-                            <InputLabel htmlFor="username">Username</InputLabel>
-                            <Input id="username" type="text" username={this.state.username}
+                            <InputLabel htmlFor="username">Contact No.</InputLabel>
+                            <Input id="username" type="number" username={this.state.username}
                                    onChange={this.inputUsernameChangeHandler}/>
                             <FormHelperText className={this.state.usernameRequired}>
                                 <span className="red">required</span>
@@ -274,7 +300,7 @@ class Header extends Component {
                         <Button variant="contained" color="primary" onClick={this.loginClickHandler}>LOGIN</Button>
                     </TabContainer>
                     }
-
+                    {/*signup  page */}
                     {this.state.value === 1 &&
                     <TabContainer>
                         <FormControl required>
@@ -286,7 +312,7 @@ class Header extends Component {
                             </FormHelperText>
                         </FormControl>
                         <br/><br/>
-                        <FormControl required>
+                        <FormControl>
                             <InputLabel htmlFor="lastname">Last Name</InputLabel>
                             <Input id="lastname" type="text" lastname={this.state.lastname}
                                    onChange={this.inputLastNameChangeHandler}/>
@@ -297,10 +323,13 @@ class Header extends Component {
                         <br/><br/>
                         <FormControl required>
                             <InputLabel htmlFor="email">Email</InputLabel>
-                            <Input id="email" type="text" email={this.state.email}
+                            <Input id="email" type="email" email={this.state.email}
                                    onChange={this.inputEmailChangeHandler}/>
                             <FormHelperText className={this.state.emailRequired}>
                                 <span className="red">required</span>
+                            </FormHelperText>
+                            <FormHelperText className={this.state.isEmailValid}>
+                                <span className="red">Invalid Email</span>
                             </FormHelperText>
                         </FormControl>
                         <br/><br/>
@@ -311,6 +340,10 @@ class Header extends Component {
                             <FormHelperText className={this.state.registerPasswordRequired}>
                                 <span className="red">required</span>
                             </FormHelperText>
+                            <FormHelperText className={this.state.isPassValid}>
+                                <span className="red">Password must contain at least one capital letter, one small letter,
+                                    one number, and one special character</span>
+                            </FormHelperText>
                         </FormControl>
                         <br/><br/>
                         <FormControl required>
@@ -319,6 +352,9 @@ class Header extends Component {
                                    onChange={this.inputContactChangeHandler}/>
                             <FormHelperText className={this.state.contactRequired}>
                                 <span className="red">required</span>
+                            </FormHelperText>
+                            <FormHelperText className={this.state.isContactValid}>
+                                <span className="red">Contact No. must contain only numbers and must be 10 digits long</span>
                             </FormHelperText>
                         </FormControl>
                         <br/><br/>
@@ -331,7 +367,7 @@ class Header extends Component {
                         }
                         <br/><br/>
                         <Button variant="contained" color="primary"
-                                onClick={this.registerClickHandler}>REGISTER</Button>
+                                onClick={this.registerClickHandler}>SIGNUP</Button>
                     </TabContainer>
                     }
                 </Modal>
