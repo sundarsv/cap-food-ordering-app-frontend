@@ -1,0 +1,36 @@
+.app-header {
+    background-color: #708090;
+    color: #ffffff;
+    padding: 8px 32px 8px 16px;
+}
+.searchIcon {
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+}
+.inputInput {
+    padding-left: 10%;
+   width: 80%;
+
+}
+.login-button {
+    display: flex;
+}
+
+.tabs {
+    margin-bottom: 20px;
+}
+
+.dispNone {
+    display: none;
+}
+
+.dispBlock {
+    display: block;
+}
+
+.red {
+    color: red;
+}
