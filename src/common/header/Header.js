@@ -16,6 +16,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import Toc from '@material-ui/icons/Toc';
 import Grid from "@material-ui/core/Grid/Grid";
+import Snackbar from '@material-ui/core/Snackbar';
 
 const customStyles = {
     content: {
@@ -34,16 +35,17 @@ const TabContainer = function (props) {
             {props.children}
         </Typography>
     )
-}
+};
 
 TabContainer.propTypes = {
     children: PropTypes.node.isRequired
-}
+};
 
 class Header extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -65,7 +67,7 @@ class Header extends Component {
             contactRequired: "dispNone",
             contact: "",
             registrationSuccess: false,
-            loggedIn: sessionStorage.getItem("access-token") == null ? false : true
+            loggedIn: sessionStorage.getItem("access-token") != null
         }
     }
 
@@ -89,17 +91,18 @@ class Header extends Component {
             registerPasswordRequired: "dispNone",
             registerPassword: "",
             contactRequired: "dispNone",
-            contact: ""
+            contact: "",
+            openSnackBar: false
         });
-    }
+    };
 
     closeModalHandler = () => {
         this.setState({modalIsOpen: false});
-    }
+    };
 
     tabChangeHandler = (event, value) => {
         this.setState({value});
-    }
+    };
 
     loginClickHandler = () => {
         this.state.username === "" ? this.setState({usernameRequired: "dispBlock"}) : this.setState({usernameRequired: "dispNone"});
@@ -126,18 +129,22 @@ class Header extends Component {
         xhrLogin.setRequestHeader("Content-Type", "application/json");
         xhrLogin.setRequestHeader("Cache-Control", "no-cache");
         xhrLogin.send(dataLogin);
-    }
+    };
 
     inputUsernameChangeHandler = (e) => {
         this.setState({username: e.target.value});
-    }
+    };
 
     inputLoginPasswordChangeHandler = (e) => {
         this.setState({loginPassword: e.target.value});
-    }
+    };
 
-    registerClickHandler = () => {
-        // let emailPattern = "/^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$/";
+    /**
+     * validate the sign up page
+     * */
+    validateSignUp() {
+
+        const emailRegx =/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
         const passwordRegx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
         const contactRegx = /^[0-9]{10}$/;
 
@@ -146,7 +153,7 @@ class Header extends Component {
         this.state.email === "" ? this.setState({
             emailRequired: "dispBlock",
             isEmailValid: "dispNone"
-        }) : this.state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) ? this.setState({
+        }) : this.state.email.match(emailRegx) ? this.setState({
             isEmailValid: "dispNone",
             emailRequired: "dispNone"
         }) : this.setState({isEmailValid: "dispBlock", emailRequired: "dispNone"});
@@ -158,63 +165,98 @@ class Header extends Component {
             }) : this.setState({isPassValid: "dispBlock", registerPasswordRequired: "dispNone"});
 
         this.state.contact === "" ? this.setState({contactRequired: "dispBlock"}) :
-            this.state.contact.match(contactRegx)? this.setState({
+            this.state.contact.match(contactRegx) ? this.setState({
                 isContactValid: "dispNone",
                 contactRequired: "dispNone"
             }) : this.setState({isContactValid: "dispBlock", contactRequired: "dispNone"});
 
-        let dataSignup = JSON.stringify({
-            "email_address": this.state.email,
-            "first_name": this.state.firstname,
-            "last_name": this.state.lastname,
-            "mobile_number": this.state.contact,
-            "password": this.state.registerPassword
-        });
+    }
 
+    /**
+     * user sign up api call
+     */
+    signUp(dataSignup) {
+        let baseUrl = "http://localhost:8080/api";
+        let resourcePath = "/user/signup";
         let xhrSignup = new XMLHttpRequest();
         let that = this;
+
+        console.log("baseurl : " +baseUrl + resourcePath);
+        console.log("signUp Data : " + dataSignup);
         xhrSignup.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
+            if (this.readyState === 4 && this.status === 201) {
                 that.setState({
-                    registrationSuccess: true
+                    registrationSuccess: true,
+                    openSnackBar : true,
+                    value : 0
                 });
+            }else{
+                console.log(this.responseText);
             }
         });
 
-        xhrSignup.open("POST", this.props.baseUrl + "signup");
+        xhrSignup.open("POST", baseUrl + resourcePath + "?" +dataSignup.toString());
         xhrSignup.setRequestHeader("Content-Type", "application/json");
         xhrSignup.setRequestHeader("Cache-Control", "no-cache");
-        xhrSignup.send(dataSignup);
+        xhrSignup.send();
+
     }
+
+    /**
+     * singup click handler to call the sign up method
+     * */
+    signUpClickHandler = () => {
+
+        this.validateSignUp();
+
+        let dataSignup =
+            "firstName=" + this.state.firstname+
+            "&lastName=" + this.state.lastname+
+            "&email=" + this.state.email+
+            "&contactNumber="+this.state.contact+
+            "&password="+ this.state.registerPassword
+        ;
+
+
+
+        this.signUp(dataSignup);
+    };
+    handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({ openSnackBar: false });
+    };
 
     inputFirstNameChangeHandler = (e) => {
         this.setState({firstname: e.target.value});
-    }
+    };
 
     inputLastNameChangeHandler = (e) => {
         this.setState({lastname: e.target.value});
-    }
+    };
 
     inputEmailChangeHandler = (e) => {
         this.setState({email: e.target.value});
-    }
+    };
 
     inputRegisterPasswordChangeHandler = (e) => {
         this.setState({registerPassword: e.target.value});
-    }
+    };
 
     inputContactChangeHandler = (e) => {
         this.setState({contact: e.target.value});
-    }
+    };
 
-    logoutHandler = (e) => {
+    logoutHandler = () => {
         sessionStorage.removeItem("uuid");
         sessionStorage.removeItem("access-token");
 
         this.setState({
             loggedIn: false
         });
-    }
+    };
 
     render() {
         return (
@@ -354,20 +396,31 @@ class Header extends Component {
                                 <span className="red">required</span>
                             </FormHelperText>
                             <FormHelperText className={this.state.isContactValid}>
-                                <span className="red">Contact No. must contain only numbers and must be 10 digits long</span>
+                                <span
+                                    className="red">Contact No. must contain only numbers and must be 10 digits long</span>
                             </FormHelperText>
                         </FormControl>
                         <br/><br/>
                         {this.state.registrationSuccess === true &&
-                        <FormControl>
-                                    <span className="successText">
-                                        Registration Successful. Please Login!
-                                      </span>
-                        </FormControl>
+                                <div>
+                                    <Snackbar
+                                        anchorOrigin={{
+                                            vertical: 'bottom',
+                                            horizontal: 'left',
+                                        }}
+                                        open={this.state.openSnackBar}
+                                        autoHideDuration={3000}
+                                        onClose={this.handleClose}
+                                        ContentProps={{
+                                            'aria-describedby': 'message-id',
+                                        }}
+                                        message={<span id="message-id">Registered successfully! Please login now!</span>}
+                                    />
+                                </div>
                         }
                         <br/><br/>
                         <Button variant="contained" color="primary"
-                                onClick={this.registerClickHandler}>SIGNUP</Button>
+                                onClick={this.signUpClickHandler}>SIGNUP</Button>
                     </TabContainer>
                     }
                 </Modal>
