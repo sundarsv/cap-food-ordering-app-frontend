@@ -37,7 +37,7 @@ const customStyles = {
 
 const TabContainer = function (props) {
     return (
-        <Typography component="div" style={{padding: 0, textAlign: 'center'}}>
+        <Typography component="div" style={{padding: 0, textAlign: 'center', width:'parent'}}>
             {props.children}
         </Typography>
     )
@@ -147,8 +147,7 @@ class Header extends Component {
         xhrLogin.addEventListener("readystatechange", function () {
             if (this.readyState === 4 && this.status === 200) {
                 let user = JSON.parse(this.responseText);
-                sessionStorage.setItem("uuid", user.id);
-                sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
+
 
                 that.setState({
                     loggedIn: true,
@@ -160,6 +159,9 @@ class Header extends Component {
                     successMessage: 'Logged in successfully!'
 
                 });
+                sessionStorage.setItem("uuid", user.id);
+                sessionStorage.setItem("loggedInUserName", user.firstName);
+                sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
                 that.closeModalHandler();
             } else {
                 that.setState({errorResponse: this.responseText});
@@ -325,25 +327,26 @@ class Header extends Component {
         this.setState({contact: e.target.value});
     };
 
-    // handleClose = event => {
-    //     if (this.anchorEl.contains(event.target)) {
-    //         return;
-    //     }
-    //
-    //     this.setState({showUserProfileDropDown: false});
-    // };
+    handleCloseMenu = event => {
+        if (this.anchorEl.contains(event.target)) {
+            return;
+        }
+
+        this.setState({showUserProfileDropDown: false});
+    };
 
     profileClickHandler = () => {
         this.props.history.push({
             pathname: "/profile"
         });
-    }
+    };
     /**
      * this is method is logout the user from current session and navigates him to home page
-     * @param event
+     *
      */
     logoutClickHandler = () => {
         sessionStorage.removeItem("uuid");
+        sessionStorage.removeItem("loggedInUserName");
         sessionStorage.removeItem("access-token");
         this.setState({
             loggedIn: false,
@@ -407,7 +410,8 @@ class Header extends Component {
                                         aria-haspopup="true"
                                         onClick={this.profileIconClickHandler}>
                                         <AccountCircle/>
-                                        {this.state.firstName}
+                                        {sessionStorage.getItem('loggedInUserName')}
+
                                     </Button>
                                     <Popper open={this.state.showUserProfileDropDown} anchorEl={this.anchorEl}
                                             transition disablePortal>
@@ -418,7 +422,7 @@ class Header extends Component {
                                                 style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
                                             >
                                                 <Paper>
-                                                    <ClickAwayListener >
+                                                    <ClickAwayListener onClickAway={this.handleCloseMenu}>
                                                         <MenuList>
                                                             <MenuItem
                                                                 onClick={this.profileClickHandler}>My Profile</MenuItem>
