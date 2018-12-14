@@ -17,6 +17,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import Toc from '@material-ui/icons/Toc';
 import Grid from "@material-ui/core/Grid/Grid";
 import Snackbar from '@material-ui/core/Snackbar';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
 
 const customStyles = {
     content: {
@@ -73,8 +79,10 @@ class Header extends Component {
             formValid: false,
             loggedInUserName: '',
             isLoggedInContactValid: "dispNone",
-            successMessage : "",
+            successMessage: "",
             errorResponse: "",
+            showUserProfileDropDown: false,
+            enableMyAccount: false,
             loggedIn: sessionStorage.getItem("access-token") != null
         }
     }
@@ -152,9 +160,8 @@ class Header extends Component {
                     successMessage: 'Logged in successfully!'
 
                 });
-
                 that.closeModalHandler();
-            }else {
+            } else {
                 that.setState({errorResponse: this.responseText});
             }
         });
@@ -318,12 +325,42 @@ class Header extends Component {
         this.setState({contact: e.target.value});
     };
 
-    logoutHandler = () => {
+    // handleClose = event => {
+    //     if (this.anchorEl.contains(event.target)) {
+    //         return;
+    //     }
+    //
+    //     this.setState({showUserProfileDropDown: false});
+    // };
+
+    profileClickHandler = () => {
+        this.props.history.push({
+            pathname: "/profile"
+        });
+    }
+    /**
+     * this is method is logout the user from current session and navigates him to home page
+     * @param event
+     */
+    logoutClickHandler = () => {
         sessionStorage.removeItem("uuid");
         sessionStorage.removeItem("access-token");
-
         this.setState({
-            loggedIn: false
+            loggedIn: false,
+            showUserProfileDropDown: false
+        });
+        this.props.history.push({
+            pathname: "/"
+        });
+    };
+
+    /**
+     * Event handler called when the profile icon inside the header is clicked to toggle the user profile dropdown
+     * @memberof Header
+     */
+    profileIconClickHandler = () => {
+        this.setState({
+            showUserProfileDropDown: !this.state.showUserProfileDropDown
         });
     };
 
@@ -360,10 +397,39 @@ class Header extends Component {
                                 </div>
                                 :
                                 <div>
-                                    <Button variant="contained" color="default" onClick={this.logoutHandler}>
+                                    <Button
+                                        variant="contained"
+                                        color="default"
+                                        buttonRef={node => {
+                                            this.anchorEl = node;
+                                        }}
+                                        aria-owns={this.state.showUserProfileDropDown ? 'menu-list-grow' : undefined}
+                                        aria-haspopup="true"
+                                        onClick={this.profileIconClickHandler}>
                                         <AccountCircle/>
-                                        {this.state.loggedInUserName}
+                                        {this.state.firstName}
                                     </Button>
+                                    <Popper open={this.state.showUserProfileDropDown} anchorEl={this.anchorEl}
+                                            transition disablePortal>
+                                        {({TransitionProps, placement}) => (
+                                            <Grow
+                                                {...TransitionProps}
+                                                id="menu-list-grow"
+                                                style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
+                                            >
+                                                <Paper>
+                                                    <ClickAwayListener >
+                                                        <MenuList>
+                                                            <MenuItem
+                                                                onClick={this.profileClickHandler}>My Profile</MenuItem>
+                                                            <MenuItem
+                                                                onClick={this.logoutClickHandler}>Logout</MenuItem>
+                                                        </MenuList>
+                                                    </ClickAwayListener>
+                                                </Paper>
+                                            </Grow>
+                                        )}
+                                    </Popper>
                                 </div>
                             }
                         </Grid>
@@ -405,11 +471,11 @@ class Header extends Component {
                         </FormControl>
                         <br/><br/>
                         {this.state.loggedIn === true ?
-                        <FormControl>
+                            <FormControl>
                                     <span className="successText">
                                         Login Successful!
                                     </span>
-                        </FormControl>
+                            </FormControl>
                             :
                             <FormControl>
                                     <span className="red">
