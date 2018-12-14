@@ -7,7 +7,7 @@ class Home extends Component {
     render() {
         return (
             <div>
-                <Header />
+                <Header {...this.props}/>
                 <div>
                     Home page
                 </div>
