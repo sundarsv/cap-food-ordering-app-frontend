@@ -56,13 +56,8 @@
 }
 
 .menu-items {
-    float:left;
-    padding:20px;
+    padding:10px 0px 0px 20px;
     width:100%;
-}
-
-.menu-item {
-    padding:10px;
 }
 
 .menu-item-name {
@@ -77,6 +72,15 @@
     font-weight:bold;
     color:#919191;
     text-transform: uppercase;
+    padding: 10px 0px 10px 20px;
+}
+
+.menu-item {
+    padding-left: 20px;
+}
+
+.divider {
+
 }
 
 .veg-icon {
@@ -87,10 +91,33 @@
     color:red;
 }
 
-.cart {
-    float: right;
+.cart {    
+    margin:10px;
+    padding:20px;
     width:100%;
 }
+
+.cart-heading{
+    font-size:130%;
+    font-weight: bold;
+    display:inline;
+    padding-left: 5px;
+}
+
+.cart-item-name {
+    color: grey;
+    text-transform: capitalize;
+}
+
+.amount {
+    
+}
+
+.checkout-button {
+    width:100%;
+    margin: 10px;
+}
+    
 
 
 @media (min-width: 992px) {
@@ -116,11 +143,13 @@
     }
 
     .menu-items {
-        width: 50%;
+        width: 40%;
+        display:inline-block;
     }
 
     .cart {
-        width: 50%;
+        width:40%;
+        display:inline-block;
     }
 
 }
