@@ -29,7 +29,7 @@ const styles = theme => ({
       margin: theme.spacing.unit,
     },
     card: {
-        minWidth:275,
+        
     },
     badge: {
         margin: theme.spacing.unit * 2,
@@ -60,9 +60,11 @@ class Details extends Component {
     }
 
     cartRemoveButtonClickHandler = event => {
-        this.setState({snackBarOpen: true});
-        this.setState({snackBarMessage: "Item quantity decreased by 1!"});
-        this.setState({cartCounter: this.state.cartCounter - 1});
+        if (this.state.cartCounter > 0) { 
+            this.setState({snackBarOpen: true});
+            this.setState({snackBarMessage: "Item quantity decreased by 1!"});
+            this.setState({cartCounter: this.state.cartCounter - 1});
+        }
     }
 
     handleClose = event => {
@@ -79,7 +81,7 @@ class Details extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <div>
+            <div className="details-container">
                 <Header />
                 <div className="restaurant-info">
                     <div className="restaurant-image">
@@ -101,79 +103,83 @@ class Details extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="menu-items">
-                <p className="cat-heading">Chinese</p>
-                <Divider className="divider" />
-                    <div className="menu-item">
-                    <table width="100%">
-                        <tr>
-                            <td width="10%">
-                                <FontAwesomeIcon className="veg-icon" icon="circle" />
-                            </td>
-                            <td width="50%" className="menu-item-name">
-                                Pizza test
-                            </td>
-                            <td width="30%">
-                                <FontAwesomeIcon icon="rupee-sign"/> 500.00
-                            </td>
-                            <td width="10%">
-                            <IconButton className={classes.button} onClick={this.addButtonClickHandler} >
-                                <Add className={classes.icon} />
-                            </IconButton>
-                            </td>
-                        </tr>
-                    </table>
-
-                    </div>
-                </div>
-                <div className="cart">
-                    <Card>
-                        <Badge className={classes.badge} badgeContent={this.state.cartCounter} color="primary">
-                            <ShoppingCartIcon />
-                        </Badge>
-                        <p className="cart-heading">My Cart</p>
-                        <div className="menu-item">
-                            <table width="100%">
-                                <tr>
-                                    <td width="10%">
-                                        <FontAwesomeIcon className="veg-icon" icon="stop-circle" />
+                <div className="main-container">
+                    <div className="menu-container">
+                        <div className="cat-container">
+                            <p className="cat-heading">chinese
+                            <Divider className="divider"/>
+                            </p>
+                            <table className="menu-items">
+                                <tr>    
+                                    <td width="10%" className="veg-or-non-veg-icon">
+                                        <FontAwesomeIcon className="veg-icon" icon="circle" /> 
                                     </td>
-                                    <td width="50%" className="cart-item-name">
-                                        Pizza test
+                                    <td width="50%" className="menu-item-name">
+                                        Pizza indiana
                                     </td>
-                                    <td width="2%">
-                                        <IconButton className={classes.button} onClick={this.cartRemoveButtonClickHandler} >
-                                            <Remove className={classes.icon} />
-                                        </IconButton>    
-                                    </td>
-                                    <td width="2%">
-                                        1
-                                    </td>
-                                    <td width="2%">
-                                        <IconButton className={classes.button} onClick={this.cartAddButtonClickHandler} >
-                                            <Add className={classes.icon} />
-                                        </IconButton>
-                                    </td>
-                                    <td width="20%" className="amount">
+                                    <td width="30%">
                                         <FontAwesomeIcon icon="rupee-sign"/> 500.00
                                     </td>
-                                </tr>
-                            </table>
-                            <table width="100%">
-                                <tr>
-                                    <td width="80%">
-                                        Total amount
-                                    </td>
-                                    <td width="20%">
-                                        <FontAwesomeIcon icon="rupee-sign"/> 730.00
+                                    <td>
+                                        <IconButton className={classes.button} onClick={this.addButtonClickHandler} >
+                                            <Add className={classes.icon} />
+                                       </IconButton>
                                     </td>
                                 </tr>
                             </table>
-                            <Button variant="contained" color="primary" width="full" className="checkout-button" onClick={this.checkoutButtonClickHandler}>
-                                CHECKOUT
-                            </Button>
                         </div>
-                    </Card>    
+                    </div>
+                    <div className="cart-container">
+                        <div className="cart-card-container">
+                            <Card>
+                            <div className="card-card-heading">
+                                    <Badge className={classes.badge} badgeContent={this.state.cartCounter} color="primary">
+                                            <ShoppingCartIcon />
+                                    </Badge>
+                                    <span className="cart-heading">My Cart</span>
+                            </div>
+                            <table className="cart-table" width="100%">
+                                        <tr>
+                                            <td className="veg-or-non-veg-icon">
+                                                <FontAwesomeIcon className="veg-icon" icon="circle" /> 
+                                            </td>
+                                            <td className="menu-item-name">
+                                                Pizza indiana
+                                            </td>
+                                            <td >
+                                                <IconButton onClick={this.removeButtonClickHandler} >
+                                                    <Remove />
+                                                </IconButton>
+                                            </td>
+                                            <td >
+                                                1
+                                            </td>
+                                            <td >
+                                                <IconButton onClick={this.addButtonClickHandler} >
+                                                    <Add />
+                                                </IconButton>
+                                            </td>
+                                            <td className="menu-item-amount">
+                                                <FontAwesomeIcon icon="rupee-sign"/> 500.00
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table class="cart-table" width="100%">
+                                        <tr>
+                                            <td className="bold" width="70%">TOTAL AMOUNT</td>
+                                            <td className="total-amount"><FontAwesomeIcon icon="rupee-sign"/> 500.00</td>
+                                        </tr>
+                                    </table>
+                                <div className="cart-button">
+                                        <Button variant="contained" color="primary" className="checkout-button"
+                                            onClick={this.checkoutButtonClickHandler}>
+                                            CHECKOUT
+                                        </Button>
+                                </div>
+                            </Card>
+                        </div>
+                    </div>
+
                 </div>
                 <Snackbar
                 anchorOrigin={{

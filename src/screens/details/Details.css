@@ -1,3 +1,7 @@
+.details-container{
+    width:100%;
+}
+
 .restaurant-info {
     background-color: #E8E8E8;
     width: 100%;
@@ -50,75 +54,104 @@
 }
 
 .sub-text{
-    font-size:80%;
+    color:grey;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.main-container {
+    width: 100%;
+}
+
+.menu-container {
+    display:block;
+    width: 100%;
+}
+
+.cat-container {
+    padding: 5%;
+}
+
+.cat-heading {
+    margin:0;
+    color: grey; 
+    font-size: 110%;
     text-transform: uppercase;
-    color: #919191;
+    font-weight:bold;
+}
+
+.divider {
+    margin:0px;
+    padding:0px;
 }
 
 .menu-items {
-    padding:10px 0px 0px 20px;
     width:100%;
+}
+
+.veg-icon{
+    color:green;
+}
+
+.non-veg-icon{
+    color:red;
 }
 
 .menu-item-name {
     text-transform: capitalize;
 }
-
-.bold {
-    font-weight:bold;
+    
+.cart-container {
+    display:block;
+    width: 100%;
 }
 
-.cat-heading {
-    font-weight:bold;
-    color:#919191;
-    text-transform: uppercase;
-    padding: 10px 0px 10px 20px;
+.cart-card-container {
+    padding: 5%;
 }
 
-.menu-item {
-    padding-left: 20px;
+.card-card-heading {
+    
 }
 
-.divider {
-
+.cart-table{
+    padding: 0 2% 0 4%;
 }
 
-.veg-icon {
-    color:green;
-}
-
-.non-veg-icon {
-    color:red;
-}
-
-.cart {    
-    margin:10px;
-    padding:20px;
-    width:100%;
-}
-
-.cart-heading{
-    font-size:130%;
+.cart-heading {
+    font-size: 120%;
     font-weight: bold;
-    display:inline;
-    padding-left: 5px;
 }
 
-.cart-item-name {
+.menu-item-name{
+    padding: 5%;
     color: grey;
     text-transform: capitalize;
 }
 
-.amount {
-    
+.menu-item-amount{
+    color:grey;    
 }
 
+.total-amount-heading {
+    margin:5%;
+    font-weight: bold;
+}
+
+.total-amount {
+    margin: 5%;
+    font-weight:bold;
+}
+
+.cart-button {
+    margin: 5%;
+    
+}
 .checkout-button {
-    width:100%;
-    margin: 10px;
+    width: 100%;
 }
-    
-
 
 @media (min-width: 992px) {
     .restaurant-title {
@@ -142,14 +175,25 @@
         text-align: left;
     }
 
-    .menu-items {
-        width: 40%;
-        display:inline-block;
+    .main-container {
+        overflow:hidden;
+    }
+    .menu-container {
+        width: 50%;
+        float: left;
     }
 
-    .cart {
-        width:40%;
+    .cat-container {
+        overflow: hidden;
+    }
+    
+    .cart-container {
         display:inline-block;
+        width: 50%;
+    }
+
+    .cart-card-container {
+        padding: 5%;
     }
 
 }
