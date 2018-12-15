@@ -6,12 +6,12 @@ import Profile from '../screens/profile/Profile';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 class Controller extends Component {
-
+    baseUrl = "http://localhost:8080/api";
     render() {
         return (
             <Router>
                 <div>
-                    <Route exact path='/' render={(props) => <Home {...props} />} />
+                    <Route exact path='/' render={(props) => <Home {...props} baseUrl={this.baseUrl}/>} />
                     <Route path='/restaurant/{restaurantID}' render={(props) => <Details {...props} />} />
                     <Route path='/checkout' render={(props) => <Checkout {...props} />} />
                     <Route path='/profile' render={(props) => <Profile {...props} />} />

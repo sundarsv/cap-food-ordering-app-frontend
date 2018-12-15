@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import '../home/Home.css';
+import PropTypes from 'prop-types';
 import Header from '../../common/header/Header';
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -7,42 +8,119 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
+import withStyles from "@material-ui/core/es/styles/withStyles";
+import Grid from "@material-ui/core/Grid/Grid";
+
+const styles = {
+    card: {
+        maxWidth: 300,
+    },
+    media: {
+        height: 140,
+    },
+};
 
 class Home extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            restaurants: []
+        };
+    }
+
+    componentDidMount() {
+        this.findAllRestaurant();
+        console.log(this.state.restaurants);
+    };
+
+    /**
+     * this method fetches all list of restaurant
+     */
+    findAllRestaurant() {
+        let resourcePath = "/restaurant";
+        let xhr = new XMLHttpRequest();
+        let that = this;
+
+        console.log("baseurl : " + this.props.baseUrl + resourcePath);
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4 && this.status === 200) {
+                that.setState({
+                    restaurants: JSON.parse(this.responseText)
+                });
+            } else {
+                that.setState({errorResponse: this.responseText});
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("GET", this.props.baseUrl + resourcePath);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+        xhr.send();
+
+    }
 
     render() {
+        const classes = this.props.classes;
         return (
             <div>
                 <Header {...this.props}/>
-                <div>
-                    <Card>
-                        <CardActionArea>
-                            <CardMedia
-                                component="img"
-                                alt="Contemplative Reptile"
-                                height="140"
-                                image="/static/images/cards/contemplative-reptile.jpg"
-                                title="Contemplative Reptile"
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="h5" component="h2">
-                                    Rike -Terrance Bar and Grill
-                                </Typography>
-                                <Typography component="p">
-                                    Lizards are a widespread group of squamate reptiles, with over 6,000 species,
-                                    ranging
-                                    across all continents except Antarctica
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
-                        <CardActions>
-                            <i className="fa fa-star" aria-hidden="true"></i><span> 4.2 (2002)</span><i className="fas fa-rupee-sign"></i><span> 1800 for two</span>
-                        </CardActions>
-                    </Card>
-                </div>
+                <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                      spacing={16}
+                      className="grid-container">
+                    {this.state.restaurants.map((restaurant) =>
+                        (
+                            <Grid item key={restaurant.id}>
+
+                                <Card className={classes.card}>
+                                    <CardActionArea>
+                                        <CardMedia
+                                            component="img"
+                                            alt={restaurant.restaurantName}
+                                            className={classes.media}
+                                            image={restaurant.photoUrl}
+                                            title={restaurant.restaurantName}
+                                        />
+                                        <CardContent>
+                                            <Typography gutterBottom variant="h6" component="h2">
+                                                {restaurant.restaurantName}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardContent>
+                                            <Typography component="p">
+                                                {restaurant.categories}
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                    <CardActions>
+                                        <div>
+                                            <i className="fa fa-star" aria-hidden="true"></i>
+                                            <span> {restaurant.userRating} ({restaurant.numberUsersRated})</span>
+                                        </div>
+                                        <div>
+                                            <i className="fas fa-rupee-sign"></i>
+                                            <span> {restaurant.avgPrice} for two</span>
+                                        </div>
+
+                                    </CardActions>
+                                </Card>
+
+                            </Grid>
+
+                        ))}
+
+                </Grid>
             </div>
         )
     }
 }
 
-export default Home;
+Home.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Home);
