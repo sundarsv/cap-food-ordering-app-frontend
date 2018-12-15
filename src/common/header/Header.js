@@ -383,6 +383,7 @@ class Header extends Component {
                             </div>
                             <Input className="inputInput"
                                    placeholder="Search by Restaurant Name"
+                                   onChange={this.props.onChange}
                             />
                         </Grid>
                         <Grid item sm={3} xs={12}>

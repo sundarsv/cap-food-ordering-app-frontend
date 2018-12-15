@@ -13,7 +13,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 
 const styles = {
     card: {
-        maxWidth: 300,
+       maxWidth: 285
     },
     media: {
         height: 140,
@@ -32,6 +32,42 @@ class Home extends Component {
         this.findAllRestaurant();
         console.log(this.state.restaurants);
     };
+
+    /**
+     * search handler for restaurant name
+     */
+    searchChangeHandler = (e) => {
+        let restaurantName = e.target.value;
+        this.searchRestaurantByName(restaurantName);
+    }
+
+    /**
+     * this method finds all restaurant by its name
+     * @param restaurantName name of searched restaurant
+     */
+    searchRestaurantByName(restaurantName){
+        let resourcePath = "/restaurant/name/" + restaurantName;
+        let xhr = new XMLHttpRequest();
+        let that = this;
+
+        console.log("baseurl : " + this.props.baseUrl + resourcePath);
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4 && this.status === 200) {
+                that.setState({
+                    restaurants: JSON.parse(this.responseText)
+                });
+            } else {
+                that.setState({errorResponse: this.responseText});
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("GET", this.props.baseUrl + resourcePath);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+        xhr.send();
+
+    }
 
     /**
      * this method fetches all list of restaurant
@@ -64,11 +100,11 @@ class Home extends Component {
         const classes = this.props.classes;
         return (
             <div>
-                <Header {...this.props}/>
+                <Header {...this.props} onChange={this.searchChangeHandler}/>
                 <Grid
                       container
                       direction="row"
-                      justify="center"
+                      justify="flex-start"
                       alignItems="center"
                       spacing={16}
                       className="grid-container">
