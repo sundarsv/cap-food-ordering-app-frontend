@@ -23,6 +23,8 @@ import MenuList from '@material-ui/core/MenuList';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
+import Menu from "@material-ui/core/Menu/Menu";
+import Popover from "@material-ui/core/Popover/Popover";
 
 const customStyles = {
     content: {
@@ -37,7 +39,7 @@ const customStyles = {
 
 const TabContainer = function (props) {
     return (
-        <Typography component="div" style={{padding: 0, textAlign: 'center', width:'parent'}}>
+        <Typography component="div" style={{padding: 0, textAlign: 'center', width: 'parent'}}>
             {props.children}
         </Typography>
     )
@@ -58,6 +60,7 @@ class Header extends Component {
         this.state = {
             modalIsOpen: false,
             value: 0,
+            anchorEl: null,
             usernameRequired: "dispNone",
             username: "",
             loginPasswordRequired: "dispNone",
@@ -327,12 +330,10 @@ class Header extends Component {
         this.setState({contact: e.target.value});
     };
 
-    handleCloseMenu = event => {
-        if (this.anchorEl.contains(event.target)) {
-            return;
-        }
+    handleCloseMenu = () => {
 
-        this.setState({showUserProfileDropDown: false});
+
+        this.setState({showUserProfileDropDown: false, anchorEl: null});
     };
 
     profileClickHandler = () => {
@@ -358,26 +359,52 @@ class Header extends Component {
     };
 
     /**
-     * Event handler called when the profile icon inside the header is clicked to toggle the user profile dropdown
+     * Event handler called when the profile menu icon inside the header is clicked to toggle the user profile dropdown
      * @memberof Header
      */
-    profileIconClickHandler = () => {
+    profileIconClickHandler = (event) => {
         this.setState({
+            anchorEl: event.currentTarget,
             showUserProfileDropDown: !this.state.showUserProfileDropDown
         });
     };
 
     render() {
+        const renderMenu = (
+            <Menu
+                id="menu-list-grow"
+                open={this.state.showUserProfileDropDown}
+                anchorEl={this.state.anchorEl}
+                onClose={this.handleCloseMenu}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+
+                getContentAnchorEl={null}
+            >
+
+                <MenuItem onClick={this.profileClickHandler}>Profile</MenuItem>
+                <MenuItem onClick={this.logoutClickHandler}>Logout</MenuItem>
+            </Menu>
+        );
         return (
             <div>
                 <header className="app-header">
-                    <Grid container>
-                        <Grid item sm={3} xs={12}>
+                    <Grid container
+                          direction="row"
+                          justify="flex-start"
+                          alignItems="center">
+                        <Grid item lg={3} xs={12}>
                             <IconButton color="inherit" aria-label="Open drawer">
                                 <Fastfood/>
                             </IconButton>
                         </Grid>
-                        <Grid item sm={3} xs={12}>
+                        <Grid item lg={3} xs={12}>
                             <div className="searchIcon">
                                 <SearchIcon/>
                             </div>
@@ -386,16 +413,17 @@ class Header extends Component {
                                    onChange={this.props.onChange}
                             />
                         </Grid>
-                        <Grid item sm={3} xs={12}>
+                        <Grid item lg={3} xs={12}>
                             <IconButton color="inherit" aria-label="Open drawer">
                                 <Toc/> Categories
                             </IconButton>
                         </Grid>
-                        <Grid item sm={3} xs={12}>
+                        <Grid item lg={3} xs={12}>
                             {!this.state.loggedIn ?
                                 <div className="login-button">
+
                                     <Button variant="contained" color="default" onClick={this.openModalHandler}>
-                                        <AccountCircle/>
+                                        <AccountCircle className="account-circle"/>
                                         Login
                                     </Button>
                                 </div>
@@ -404,42 +432,22 @@ class Header extends Component {
                                     <Button
                                         variant="contained"
                                         color="default"
-                                        buttonRef={node => {
-                                            this.anchorEl = node;
-                                        }}
                                         aria-owns={this.state.showUserProfileDropDown ? 'menu-list-grow' : undefined}
                                         aria-haspopup="true"
                                         onClick={this.profileIconClickHandler}>
-                                        <AccountCircle/>
+
+                                        <AccountCircle className="account-circle"/>
                                         {sessionStorage.getItem('loggedInUserName')}
 
                                     </Button>
-                                    <Popper open={this.state.showUserProfileDropDown} anchorEl={this.anchorEl}
-                                            transition disablePortal>
-                                        {({TransitionProps, placement}) => (
-                                            <Grow
-                                                {...TransitionProps}
-                                                id="menu-list-grow"
-                                                style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
-                                            >
-                                                <Paper>
-                                                    <ClickAwayListener onClickAway={this.handleCloseMenu}>
-                                                        <MenuList>
-                                                            <MenuItem
-                                                                onClick={this.profileClickHandler}>My Profile</MenuItem>
-                                                            <MenuItem
-                                                                onClick={this.logoutClickHandler}>Logout</MenuItem>
-                                                        </MenuList>
-                                                    </ClickAwayListener>
-                                                </Paper>
-                                            </Grow>
-                                        )}
-                                    </Popper>
+                                    {renderMenu}
+
                                 </div>
                             }
                         </Grid>
                     </Grid>
                 </header>
+                {/*modal for login and sign up*/}
                 <Modal
                     ariaHideApp={false}
                     isOpen={this.state.modalIsOpen}
@@ -492,7 +500,7 @@ class Header extends Component {
                         <Button variant="contained" color="primary" onClick={this.loginClickHandler}>LOGIN</Button>
                     </TabContainer>
                     }
-                    {/*signup  page */}
+                    {/*signup  page ...................*/}
                     {this.state.value === 1 &&
                     <TabContainer>
                         <FormControl required>
@@ -570,7 +578,7 @@ class Header extends Component {
                     </TabContainer>
                     }
                 </Modal>
-
+                {/*notification snack bar */}
                 <div>
                     <Snackbar
                         anchorOrigin={{

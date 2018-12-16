@@ -30,7 +30,7 @@ class Home extends Component {
 
     componentDidMount() {
         this.findAllRestaurant();
-        console.log(this.state.restaurants);
+        //console.log(this.state.restaurants);
     };
 
     /**
@@ -46,6 +46,11 @@ class Home extends Component {
      * @param restaurantName name of searched restaurant
      */
     searchRestaurantByName(restaurantName){
+        if(restaurantName === "") {
+            this.findAllRestaurant();
+            return;
+        }
+
         let resourcePath = "/restaurant/name/" + restaurantName;
         let xhr = new XMLHttpRequest();
         let that = this;
@@ -57,7 +62,7 @@ class Home extends Component {
                     restaurants: JSON.parse(this.responseText)
                 });
             } else {
-                that.setState({errorResponse: this.responseText});
+                that.setState({errorResponse: this.responseText, restaurants: []});
                 console.log(this.responseText);
             }
         });
@@ -96,11 +101,19 @@ class Home extends Component {
 
     }
 
+    cardClickHandler = (restaurantID) => {
+        this.props.history.push({
+            pathname: "/restaurant/" + restaurantID
+        });
+    }
+
     render() {
         const classes = this.props.classes;
         return (
             <div>
-                <Header {...this.props} onChange={this.searchChangeHandler}/>
+                <div>
+                    <Header {...this.props} onChange={this.searchChangeHandler}/>
+                </div>
                 <Grid
                       container
                       direction="row"
@@ -110,9 +123,11 @@ class Home extends Component {
                       className="grid-container">
                     {this.state.restaurants.map((restaurant) =>
                         (
-                            <Grid item key={restaurant.id}>
+                            <Grid item lg={3} sm={6} key={restaurant.id}>
 
-                                <Card className={classes.card}>
+                                <Card className={classes.card}
+                                      onClick={() => this.cardClickHandler(restaurant.id)}
+                                >
                                     <CardActionArea>
                                         <CardMedia
                                             component="img"
@@ -132,14 +147,14 @@ class Home extends Component {
                                             </Typography>
                                         </CardContent>
                                     </CardActionArea>
-                                    <CardActions>
-                                        <div>
+                                    <CardActions className="action-container">
+                                        <div className="user-rating">
                                             <i className="fa fa-star" aria-hidden="true"></i>
                                             <span> {restaurant.userRating} ({restaurant.numberUsersRated})</span>
                                         </div>
-                                        <div>
-                                            <i className="fas fa-rupee-sign"></i>
-                                            <span> {restaurant.avgPrice} for two</span>
+                                        <div  className="user-price">
+                                            <i className="fas fa-rupee-sign">
+                                            <span> {restaurant.avgPrice} for two</span> </i>
                                         </div>
 
                                     </CardActions>
