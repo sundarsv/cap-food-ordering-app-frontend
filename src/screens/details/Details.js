@@ -17,8 +17,6 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Card from '@material-ui/core/Card';  
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
-
-
 library.add(faStar, faCircle, faRupeeSign, faStopCircle)
 
 const styles = theme => ({
@@ -72,7 +70,7 @@ class Details extends Component {
     }
 
     checkoutButtonClickHandler = event => {
-        if (this.state.cartCounter == 0) {
+        if (this.state.cartCounter === 0) {
             this.setState({snackBarOpen: true});
             this.setState({snackBarMessage: "Please add an item to your cart!"});
         }
@@ -85,7 +83,7 @@ class Details extends Component {
                 <Header />
                 <div className="restaurant-info">
                     <div className="restaurant-image">
-                        <img height="200px" width="auto" src="https://b.zmtcdn.com/data/pictures/0/18564740/686000d2b5cfebfad3300f313eaae79c.jpg?output-format=webp" />
+                        <img alt= "abc" height="200px" width="auto" src="https://b.zmtcdn.com/data/pictures/0/18564740/686000d2b5cfebfad3300f313eaae79c.jpg?output-format=webp" />
                     </div>
                     <div className="restaurant-details">
                         <p className="restaurant-title">Loud Silence</p>
