@@ -3,6 +3,9 @@ import '../checkout/Checkout.css';
 import Header from '../../common/header/Header';
 import GridList from '@material-ui/core/GridList';
 import { GridListTile, Typography } from '@material-ui/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import Stepper from '@material-ui/core/Stepper';
 import StepLabel from '@material-ui/core/StepLabel';
 import Step from '@material-ui/core/Step';
@@ -27,6 +30,50 @@ import CloseIcon from '@material-ui/icons/Close';
 import ReactDOM from 'react-dom';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+
+
+library.add(faCircle);
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.paper
+    },
+    gridListMain: {
+        flexWrap: 'nowrap',
+        transform: 'translateZ(0)',
+    },
+    card: {
+        maxWidth: 560,
+        margin: 10,
+    },
+    media: {
+        height: 0,
+        paddingTop: '56.25%', // 16:9
+    },
+    title: {
+        fontWeight: 'strong',
+        color: 'red',
+    },
+    actions: {
+        display: 'flex',
+    },
+    expand: {
+        transform: 'rotate(0deg)',
+        transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+        }),
+        marginLeft: 'auto',
+        [theme.breakpoints.up('sm')]: {
+            marginRight: -8,
+        },
+    },
+    expandOpen: {
+        transform: 'rotate(180deg)',
+    },
+    button: {
+        margin: '20px'
+    }
+});
 
 
 class Checkout extends Component {
