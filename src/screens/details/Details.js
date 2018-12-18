@@ -48,6 +48,7 @@ class Details extends Component {
             snackBarOpen:false,
             snackBarMessage:"",
             cartCounter:0,
+            cartItems: [{}]
         }
     }
 
@@ -74,17 +75,24 @@ class Details extends Component {
     }
 
     /* Function to add an item to cart */
-    addButtonClickHandler = event => {
-        this.setState({snackBarOpen: true});
-        this.setState({snackBarMessage:"Item added to cart!"})
-        this.setState({cartCounter: this.state.cartCounter + 1});
+    addButtonClickHandler(item) {
+            /*This IF stt is to add first item to cart*/
+            if (this.state.cartItems.length == 1) {
+                console.log("entering if stt");
+                this.setState({cartItems: item});
+                this.state.cartItems.push(item.quantity = 1);
+                this.setState({cartCounter: this.state.cartCounter +1});
+                this.setState({snackBarOpen: true});
+                this.setState({snackBarMessage:"Item added to cart!"})
+            } 
+        console.log(this.state.cartItems);
     }
 
     /* Function to increase an item's quantity in cart */
     cartAddButtonClickHandler = event => {
         this.setState({snackBarOpen: true});
         this.setState({snackBarMessage: "Item quantity increased by 1!"});
-        this.setState({cartCounter: this.state.cartCounter + 1});
+        this.setState({cartCounter: this.state.cartCounter ++});
     }
 
     /* Function to decrease an item's quantity in cart */
@@ -92,7 +100,7 @@ class Details extends Component {
         if (this.state.cartCounter > 0) { 
             this.setState({snackBarOpen: true});
             this.setState({snackBarMessage: "Item quantity decreased by 1!"});
-            this.setState({cartCounter: this.state.cartCounter - 1});
+            this.setState({cartCounter: this.state.cartCounter -1});
         }
     }
 
@@ -113,6 +121,8 @@ class Details extends Component {
         const restaurant = this.state.restaurant;
         const address = this.state.address;
         const categories = this.state.categories;
+        const cartItems = this.state.cartItems;
+        console.log(cartItems);
         const { classes } = this.props;
         return (
             <div className="details-container">
@@ -165,7 +175,7 @@ class Details extends Component {
                                             <FontAwesomeIcon icon="rupee-sign"/> {item.price}
                                         </td>
                                         <td>
-                                            <IconButton className={classes.button} onClick={this.addButtonClickHandler} >
+                                            <IconButton className={classes.button} onClick={() => this.addButtonClickHandler(item)} >
                                                 <Add className={classes.icon} />
                                         </IconButton>
                                         </td>
