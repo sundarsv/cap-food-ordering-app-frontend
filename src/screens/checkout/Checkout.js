@@ -75,6 +75,147 @@ const styles = theme => ({
     }
 });
 
+    tabChangeHandler = (event, tabValue) => {
+        this.setState({ tabValue });
+    }
+
+    locationChangeHandler = event => {
+        this.setState({ location: event.target.value });
+    }
+
+
+    handleNext = () => {
+        if (this.state.tabValue === 1) {
+
+            this.state.flat === "" ? this.setState({ incorrectDetails:"true", flatRequired: "dispBlock" }) : this.setState({  incorrectDetails:"false", flatRequired: "dispNone" });
+            this.state.city === "" ? this.setState({ incorrectDetails:"true", cityRequired: "dispBlock" }) : this.setState({  incorrectDetails:"false",cityRequired: "dispNone" });
+            this.state.locality === "" ? this.setState({ incorrectDetails:"true", localityRequired: "dispBlock" }) : this.setState({  incorrectDetails:"false", localityRequired: "dispNone" });
+            this.state.zipcode === "" ? this.setState({ incorrectDetails:"true", zipcodeRequired: "dispBlock" }) : this.setState({  incorrectDetails:"false",zipcodeRequired: "dispNone" });
+            if (this.state.zipcode !=="" ) {
+                if (this.state.zipcode.length === 6 && isNum(this.state.zipcode)) {
+                    this.setState({ incorrectDetails:"false", incorrectZipcode: "dispNone" }) 
+                }
+                else {
+                    this.setState({ incorrectDetails:"true", incorrectZipcode: "dispBlock" })
+                }
+            }
+            if (this.state.incorrectDetails === "false") {
+                var savedAddress = {
+                    "id": "",
+                    "flatBuilNo": this.state.flatBuilNo,
+                    "locality": this.state.locality,
+                    "city": this.state.city,
+                    "zipcode": this.state.zipcode,
+                    "state": {
+                        "id": "",
+                        "stateName": this.state.location
+                    }
+                }
+                this.setState(state => ({
+                selectedAddress: savedAddress,
+                }));
+            }
+        }
+
+        if (this.state.activeStep === 1 && this.state.value!=="") {
+            this.setState(state => ({
+            orderPlaced: "dispBlock",
+            activeStep: state.activeStep + 1
+            }));     
+        }
+
+        if (this.state.activeStep !== 1 && this.state.incorrectDetails === "false" && this.state.selectedAddress.length !== 0) {
+            this.setState(state => ({
+            activeStep: state.activeStep + 1,
+            })); 
+        }
+
+    };
+
+    handleBack = () => {
+        this.setState(state => ({
+        activeStep: state.activeStep - 1,
+        }));
+    };
+
+    handleReset = () => {
+        this.setState({
+        activeStep: 0,
+        });
+    };
+
+    handleChange = event => {
+        this.setState({ value: event.target.value });
+    };
+
+    inputFlatChangeHandler = (e) => {
+        this.setState({ 
+            flat: e.target.value,
+        });
+    }
+
+    inputCityChangeHandler = (e) => {
+        this.setState({ city: e.target.value });
+    }
+
+    inputLocalityChangeHandler = (e) => {
+        this.setState({ locality: e.target.value });
+    }
+
+    inputZipcodeChangeHandler = (e) => {
+        this.setState({ zipcode: e.target.value });
+    }
+
+    inputStateChangeHandler = (e) => {
+        this.setState({ statename: e.target.value });
+    }
+
+    changeHandler = () => {
+      ReactDOM.render(<Checkout />, document.getElementById('root'));
+    }
+
+    iconClickHandler = (address,index) => {
+        this.state.addresses.map(obj => (
+           obj.id === address.id ?
+            this.setState({
+                selectedAddress: address,
+                selectedIndex: index,
+                addressClass: "selectionGrid" ,
+                iconClass: "green"
+           })
+           :
+           console.log("dint match "+obj.id)
+         ));
+    }
+
+    snackBarCloseHandler = () => {
+         this.setState({ 
+             open: false 
+        });
+    }
+
+    confirmOrderHandler = () => {
+        let xhr = new XMLHttpRequest();
+        let that = this;
+        var address = this.state.selectedAddress;
+        var parameters="adrressId="+address.id+"&flatBuilNo="+address.flatBuilNo+"&locality="+address.locality+"&city="+address.city
+        +"&zipcode="+address.zipcode+"&stateId="+address.state.id+"&bill="+this.state.totalCartItemsValue;
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    open:true,
+                    orderNotificationMessage : "Your order has been placed successfully!"            
+                });        
+             }
+             else {
+                that.setState({
+                    open: true,
+                    orderNotificationMessage : "Unable to place your order! Please try again!"            
+                });  
+             }
+        });
+
+    }
 
 class Checkout extends Component {
     
