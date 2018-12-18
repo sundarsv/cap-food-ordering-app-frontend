@@ -364,6 +364,7 @@ class Header extends Component {
     };
 
     render() {
+
         const renderMenu = (
             <Menu
                 id="menu-list-grow"
@@ -386,13 +387,16 @@ class Header extends Component {
                 <MenuItem onClick={this.logoutClickHandler}>Logout</MenuItem>
             </Menu>
         );
+
+
         return (
             <div>
                 <header className="app-header">
                     <Grid container
                           direction="row"
-                          justify="flex-start"
-                          alignItems="center">
+                          justify="space-between"
+                          alignItems="center"
+                    >
                         <Grid item lg={3} xs={12}>
                             <IconButton color="inherit" aria-label="Open drawer">
                                 <Fastfood/>
@@ -420,33 +424,34 @@ class Header extends Component {
                         </Grid>
                         <Grid item lg={3} xs={12}>
                             {!this.state.loggedIn ?
-                                <div className="login-button">
 
-                                    <Button variant="contained" color="default"
-                                            onClick={this.openModalHandler}>
-                                        <AccountCircle className="account-circle"/>
-                                        Login
-                                    </Button>
-                                </div>
-                                :
-                                <div>
-                                    <Button
-                                        variant="contained"
+                                <Button variant="contained"
+                                        className="login-button"
                                         color="default"
-                                        aria-owns={this.state.showUserProfileDropDown ? 'menu-list-grow' : undefined}
-                                        aria-haspopup="true"
-                                        onClick={this.profileIconClickHandler}>
+                                        onClick={this.openModalHandler}>
+                                    <AccountCircle className="account-circle"/>
+                                    Login
+                                </Button>
 
-                                        <AccountCircle className="account-circle"/>
-                                        {sessionStorage.getItem('loggedInUserName')}
+                                :
 
-                                    </Button>
-                                    {renderMenu}
+                                <Button
+                                    variant="contained"
+                                    color="default"
+                                    className="login-button"
+                                    aria-owns={this.state.showUserProfileDropDown ? 'menu-list-grow' : undefined}
+                                    aria-haspopup="true"
+                                    onClick={this.profileIconClickHandler}>
 
-                                </div>
+                                    <AccountCircle className="account-circle"/>
+                                    {sessionStorage.getItem('loggedInUserName')}
+
+                                </Button>
+
                             }
                         </Grid>
                     </Grid>
+                    {renderMenu}
                 </header>
                 {/*modal for login and sign up*/}
                 <Modal
@@ -601,7 +606,9 @@ class Header extends Component {
                         message={<span id="message-id">{this.state.successMessage}</span>}
                     />
                 </div>
+
             </div>
+
         )
     }
 }

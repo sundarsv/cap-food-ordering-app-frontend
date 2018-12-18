@@ -1,7 +1,6 @@
 .form-control {
     width: 80%;
 }
-
 .category-menu {
     color: #ffffff!important;
     padding-left: 5%;
@@ -25,9 +24,6 @@
     padding-left: 10%;
    width: 80%;
 
-}
-.login-button {
-    display: flex;
 }
 
 .tabs {
@@ -59,4 +55,11 @@
     text-decoration: none;
     color: #000;
     cursor: pointer;
+}
+
+
+@media only screen and (min-width: 768px) {
+   .login-button {
+       float: right;
+   }
 }
