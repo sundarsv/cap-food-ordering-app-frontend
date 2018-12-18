@@ -30,7 +30,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import ReactDOM from 'react-dom';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 library.add(faCircle);
 const styles = theme => ({
@@ -74,6 +75,15 @@ const styles = theme => ({
         margin: '20px'
     }
 });
+
+
+
+
+
+
+
+
+
 
 class Checkout extends Component {
     
