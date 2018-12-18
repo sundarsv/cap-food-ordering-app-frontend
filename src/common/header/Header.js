@@ -222,7 +222,7 @@ class Header extends Component {
                 isPassValid: "dispNone",
                 registerPasswordRequired: "dispNone",
                 formValid: this.state.formValid ? true : true
-            })  : this.setState({
+            }) : this.setState({
                 isPassValid: "dispBlock",
                 registerPasswordRequired: "dispNone",
                 formValid: this.state.formValid ? false : false
@@ -399,24 +399,31 @@ class Header extends Component {
                             </IconButton>
                         </Grid>
                         <Grid item lg={3} xs={12}>
-                            <div className="searchIcon">
-                                <SearchIcon/>
-                            </div>
-                            <Input className="inputInput"
-                                   placeholder="Search by Restaurant Name"
-                                   onChange={this.props.onChange}
-                            />
+                            {this.props.isHomePage && (
+                                <div>
+                                    <div className="searchIcon">
+                                        <SearchIcon/>
+                                    </div>
+                                    < Input className="inputInput"
+                                            placeholder="Search by Restaurant Name"
+                                            onChange={this.props.onChange}
+                                    />
+                                </div>
+                            )}
                         </Grid>
                         <Grid item lg={3} xs={12}>
+                            {this.props.isHomePage &&
                             <IconButton color="inherit" aria-label="Open drawer">
-                                <Toc/> Categories
+                                <Toc/> <Typography component="h2" className="category-menu">Categories</Typography>
                             </IconButton>
+                            }
                         </Grid>
                         <Grid item lg={3} xs={12}>
                             {!this.state.loggedIn ?
                                 <div className="login-button">
 
-                                    <Button variant="contained" color="default" onClick={this.openModalHandler}>
+                                    <Button variant="contained" color="default"
+                                            onClick={this.openModalHandler}>
                                         <AccountCircle className="account-circle"/>
                                         Login
                                     </Button>
@@ -470,8 +477,10 @@ class Header extends Component {
                         <br/><br/>
                         <FormControl required className="form-control">
                             <InputLabel htmlFor="loginPassword">Password</InputLabel>
-                            <Input id="loginPassword" type="password" loginpassword={this.state.loginPassword}
-                                   onChange={this.inputLoginPasswordChangeHandler}  value={this.state.loginPassword}/>
+                            <Input id="loginPassword" type="password"
+                                   loginpassword={this.state.loginPassword}
+                                   onChange={this.inputLoginPasswordChangeHandler}
+                                   value={this.state.loginPassword}/>
                             <FormHelperText className={this.state.loginPasswordRequired}>
                                 <span className="red">required</span>
                             </FormHelperText>
@@ -491,7 +500,8 @@ class Header extends Component {
                             </FormControl>
                         }
                         <br/><br/>
-                        <Button variant="contained" color="primary" onClick={this.loginClickHandler}>LOGIN</Button>
+                        <Button variant="contained" color="primary"
+                                onClick={this.loginClickHandler}>LOGIN</Button>
                     </TabContainer>
                     }
                     {/*signup  page ...................*/}
@@ -500,7 +510,8 @@ class Header extends Component {
                         <FormControl required className="form-control">
                             <InputLabel htmlFor="firstname">First Name</InputLabel>
                             <Input id="firstname" type="text" firstname={this.state.firstname}
-                                   onChange={this.inputFirstNameChangeHandler} value={this.state.firstname}/>
+                                   onChange={this.inputFirstNameChangeHandler}
+                                   value={this.state.firstname}/>
                             <FormHelperText className={this.state.firstnameRequired}>
                                 <span className="red">required</span>
                             </FormHelperText>
@@ -529,8 +540,10 @@ class Header extends Component {
                         <br/><br/>
                         <FormControl required className="form-control">
                             <InputLabel htmlFor="registerPassword">Password</InputLabel>
-                            <Input id="registerPassword" type="password" registerpassword={this.state.registerPassword}
-                                   onChange={this.inputRegisterPasswordChangeHandler} value={this.state.registerPassword}/>
+                            <Input id="registerPassword" type="password"
+                                   registerpassword={this.state.registerPassword}
+                                   onChange={this.inputRegisterPasswordChangeHandler}
+                                   value={this.state.registerPassword}/>
                             <FormHelperText className={this.state.registerPasswordRequired}>
                                 <span className="red">required</span>
                             </FormHelperText>

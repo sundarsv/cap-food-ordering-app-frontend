@@ -112,7 +112,7 @@ class Home extends Component {
         return (
             <div>
                 <div>
-                    <Header {...this.props} onChange={this.searchChangeHandler}/>
+                    <Header {...this.props} onChange={this.searchChangeHandler} isHomePage={true}/>
                 </div>
                 <Grid
                       container

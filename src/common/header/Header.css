@@ -1,8 +1,13 @@
 .form-control {
     width: 80%;
 }
+
+.category-menu {
+    color: #ffffff!important;
+    padding-left: 5%;
+}
 .account-circle {
-    padding-right: 15%;
+    padding-right: 10%;
 }
 .app-header {
     background-color: #708090;
