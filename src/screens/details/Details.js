@@ -17,8 +17,11 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Card from '@material-ui/core/Card';  
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
+
+
 library.add(faStar, faCircle, faRupeeSign, faStopCircle)
 
+/* Styles for Material UI */
 const styles = theme => ({
     button: {
       margin: theme.spacing.unit,
@@ -39,24 +42,48 @@ class Details extends Component {
     constructor() {
         super();
         this.state = {
+            restaurant: {},
             snackBarOpen:false,
             snackBarMessage:"",
             cartCounter:0,
         }
     }
 
+    /* HTTP request to fetch data for the specific restaurant */
+    componentWillMount() {
+        let xhr = new XMLHttpRequest();
+        let that = this;
+        console.log("baseurl : " + this.props.baseUrl + "/restaurant/" + this.props.match.params.restaurantID);
+        xhr.addEventListener("readystatechange", function(){
+            if(this.readyState == 4 && this.status === 200) {
+                that.setState({
+                    restaurant: JSON.parse(this.responseText)
+                });
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("GET", this.props.baseUrl + "/restaurant/" +  this.props.match.params.restaurantID);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+        xhr.send();
+    }
+
+    /* Function to add an item to cart */
     addButtonClickHandler = event => {
         this.setState({snackBarOpen: true});
         this.setState({snackBarMessage:"Item added to cart!"})
         this.setState({cartCounter: this.state.cartCounter + 1});
     }
 
+    /* Function to increase an item's quantity in cart */
     cartAddButtonClickHandler = event => {
         this.setState({snackBarOpen: true});
         this.setState({snackBarMessage: "Item quantity increased by 1!"});
         this.setState({cartCounter: this.state.cartCounter + 1});
     }
 
+    /* Function to decrease an item's quantity in cart */
     cartRemoveButtonClickHandler = event => {
         if (this.state.cartCounter > 0) { 
             this.setState({snackBarOpen: true});
@@ -65,29 +92,32 @@ class Details extends Component {
         }
     }
 
+    /* Function to close snack bar */
     handleClose = event => {
         this.setState({snackBarOpen: false});
     }
 
+    /* Function to open snack bar */
     checkoutButtonClickHandler = event => {
-        if (this.state.cartCounter === 0) {
+        if (this.state.cartCounter == 0) {
             this.setState({snackBarOpen: true});
             this.setState({snackBarMessage: "Please add an item to your cart!"});
         }
     }
 
     render() {
+        const restaurant = this.state.restaurant;
         const { classes } = this.props;
         return (
             <div className="details-container">
-                <Header />
+                <Header {...this.props}/>
                 <div className="restaurant-info">
                     <div className="restaurant-image">
-                        <img alt= "abc" height="200px" width="auto" src="https://b.zmtcdn.com/data/pictures/0/18564740/686000d2b5cfebfad3300f313eaae79c.jpg?output-format=webp" />
+                        <img height="200px" width="auto" src={restaurant.photoUrl} />
                     </div>
                     <div className="restaurant-details">
-                        <p className="restaurant-title">Loud Silence</p>
-                        <p className="restaurant-locality">CBD-BELAPUR</p>
+                        <p className="restaurant-title">{restaurant.restaurantName}</p>
+                        <p className="restaurant-locality">CBD-Belapur</p>
                         <p className="restaurant-categories">Chinese, Continental, Indian, Italian, Snacks</p>
                         <div className="rating-cost">
                             <div className="restaurant-rating">
