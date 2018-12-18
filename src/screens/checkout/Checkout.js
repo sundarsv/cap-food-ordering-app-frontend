@@ -75,6 +75,95 @@ const styles = theme => ({
     }
 });
 
+class Checkout extends Component {
+    
+    constructor() {
+        super();
+        this.state = {
+            id : "",
+            value:"",
+            location:"",
+            tabValue: 0,
+            activeStep: 0,
+            flat:"",
+            city:"",
+            open: false,
+            locality:"",
+            zipcode:"",
+            statename:"",
+            iconClass:"",
+            addressClass:"",
+            selectedIndex:"",
+            flatRequired: "dispNone",
+            cityRequired: "dispNone",
+            stateRequired: "dispNone",
+            zipcodeRequired: "dispNone",
+            localityRequired: "dispNone",
+            incorrectZipcode: "dispNone",
+            orderPlaced: "dispNone",
+            incorrectDetails:"false",
+            address : "" ,
+            categories : [],
+            totalCartItemsValue: "",
+            orderNotificationMessage:"",
+            states:[],
+            selectedAddress:[],
+            cartItems: [],
+            paymentModes: [],
+            addresses: []
+        }
+    }
+    
+    componentWillMount() {
+
+        if (sessionStorage.getItem("access-token") == null) {
+            this.props.history.push('/');
+        }
+        else {
+            let data = null;
+            let xhr = new XMLHttpRequest();
+            let xhr1 = new XMLHttpRequest();
+            let xhr2 = new XMLHttpRequest();
+            let that = this;
+        
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    that.setState({
+                        addresses : JSON.parse(this.responseText)             
+                    });         
+                }
+            });
+
+            xhr.open("GET", "http://localhost:8085/api/address/user");
+            xhr.setRequestHeader("accessToken", sessionStorage.getItem("access-token"));
+            xhr.send(data);
+
+            xhr1.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    that.setState({
+                        paymentModes : JSON.parse(this.responseText)             
+                    });         
+                }
+            });
+
+            xhr1.open("GET", "http://localhost:8085/api/payment");
+            xhr1.setRequestHeader("accessToken", sessionStorage.getItem("access-token"));
+            xhr1.send(data);
+
+            xhr2.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    that.setState({
+                        states : JSON.parse(this.responseText)             
+                    });
+                }
+            });
+
+            xhr2.open("GET", "http://localhost:8085/api/states");
+            xhr2.send(data);
+        }
+
+    }
+    
     tabChangeHandler = (event, tabValue) => {
         this.setState({ tabValue });
     }
@@ -214,49 +303,12 @@ const styles = theme => ({
                 });  
              }
         });
+        
+        xhr.open("GET", "http://localhost:8085/api/order");
+        xhr.send(parameters);
 
     }
-
-class Checkout extends Component {
     
-    constructor() {
-        super();
-        this.state = {
-            id : "",
-            value:"",
-            location:"",
-            tabValue: 0,
-            activeStep: 0,
-            flat:"",
-            city:"",
-            open: false,
-            locality:"",
-            zipcode:"",
-            statename:"",
-            iconClass:"",
-            addressClass:"",
-            selectedIndex:"",
-            flatRequired: "dispNone",
-            cityRequired: "dispNone",
-            stateRequired: "dispNone",
-            zipcodeRequired: "dispNone",
-            localityRequired: "dispNone",
-            incorrectZipcode: "dispNone",
-            orderPlaced: "dispNone",
-            incorrectDetails:"false",
-            address : "" ,
-            categories : [],
-            totalCartItemsValue: "",
-            orderNotificationMessage:"",
-            states:[],
-            selectedAddress:[],
-            cartItems: [],
-            paymentModes: [],
-            addresses: []
-        }
-    }
-    
-
     render() {
         const { classes } = this.props;
         const steps = getSteps();
