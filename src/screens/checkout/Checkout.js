@@ -76,15 +76,6 @@ const styles = theme => ({
     }
 });
 
-
-
-
-
-
-
-
-
-
 class Checkout extends Component {
     
     constructor() {
