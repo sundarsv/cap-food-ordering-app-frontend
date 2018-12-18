@@ -43,6 +43,8 @@ class Details extends Component {
         super();
         this.state = {
             restaurant: {},
+            address: {},
+            categories: [],
             snackBarOpen:false,
             snackBarMessage:"",
             cartCounter:0,
@@ -57,9 +59,11 @@ class Details extends Component {
         xhr.addEventListener("readystatechange", function(){
             if(this.readyState == 4 && this.status === 200) {
                 that.setState({
-                    restaurant: JSON.parse(this.responseText)
+                    restaurant: JSON.parse(this.responseText),
+                    address: JSON.parse(this.responseText).address,
+                    categories: JSON.parse(this.responseText).categories,
+                    items: JSON.parse(this.responseText).categories.items
                 });
-                console.log(this.responseText);
             }
         });
 
@@ -107,6 +111,8 @@ class Details extends Component {
 
     render() {
         const restaurant = this.state.restaurant;
+        const address = this.state.address;
+        const categories = this.state.categories;
         const { classes } = this.props;
         return (
             <div className="details-container">
@@ -117,15 +123,21 @@ class Details extends Component {
                     </div>
                     <div className="restaurant-details">
                         <p className="restaurant-title">{restaurant.restaurantName}</p>
-                        <p className="restaurant-locality">CBD-Belapur</p>
-                        <p className="restaurant-categories">Chinese, Continental, Indian, Italian, Snacks</p>
+                        <p className="restaurant-locality">{address.locality}</p>
+                        <p className="restaurant-categories">
+                        {categories.map((cat) => 
+                            (
+                                <span className="cat-item" key={cat.id}>{cat.categoryName}</span>
+                            )
+                            )}
+                        </p>
                         <div className="rating-cost">
                             <div className="restaurant-rating">
-                                <FontAwesomeIcon icon="star" /> 4.4
-                                <p className="sub-text">Average rating by <span className="bold">658</span> users</p>
+                                <FontAwesomeIcon icon="star" /> {restaurant.userRating}
+                                <p className="sub-text">Average rating by <span className="bold">{restaurant.numberUsersRated}</span> users</p>
                             </div>
                             <div className="restaurant-avg-cost">
-                                <FontAwesomeIcon icon="rupee-sign" /> 600
+                                <FontAwesomeIcon icon="rupee-sign" /> {restaurant.avgPrice}
                                 <p className="sub-text">Average cost for two people</p>
                             </div>
                         </div>
@@ -134,27 +146,35 @@ class Details extends Component {
                 <div className="main-container">
                     <div className="menu-container">
                         <div className="cat-container">
-                            <p className="cat-heading">chinese
-                            <Divider className="divider"/>
-                            </p>
-                            <table className="menu-items">
-                                <tr>    
-                                    <td width="10%" className="veg-or-non-veg-icon">
-                                        <FontAwesomeIcon className="veg-icon" icon="circle" /> 
-                                    </td>
-                                    <td width="50%" className="menu-item-name">
-                                        Pizza indiana
-                                    </td>
-                                    <td width="30%">
-                                        <FontAwesomeIcon icon="rupee-sign"/> 500.00
-                                    </td>
-                                    <td>
-                                        <IconButton className={classes.button} onClick={this.addButtonClickHandler} >
-                                            <Add className={classes.icon} />
-                                       </IconButton>
-                                    </td>
-                                </tr>
-                            </table>
+                            {categories.map((cat) => (
+                            <div>
+                                <p key={cat.id} className="cat-heading">{cat.categoryName}</p>
+                                <Divider className="divider"/>
+                                {}
+                                {cat.items.map((item) =>
+                                    (
+                                        <table key={item.id} className="menu-items">
+                                        <tr>    
+                                        <td width="10%" className="veg-or-non-veg-icon">
+                                            <FontAwesomeIcon className={item.type} icon="circle" /> 
+                                        </td>
+                                        <td width="50%" className="menu-item-name">
+                                            {item.itemName}
+                                        </td>
+                                        <td width="30%">
+                                            <FontAwesomeIcon icon="rupee-sign"/> {item.price}
+                                        </td>
+                                        <td>
+                                            <IconButton className={classes.button} onClick={this.addButtonClickHandler} >
+                                                <Add className={classes.icon} />
+                                        </IconButton>
+                                        </td>
+                                    </tr>
+                                    </table>
+                                    )
+                                    )}
+                            </div>
+                            ))}
                         </div>
                     </div>
                     <div className="cart-container">
