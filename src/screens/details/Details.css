@@ -37,6 +37,16 @@
     text-align: center;
 }
 
+/*Appending a , for every category item in restaurant info */
+.cat-item:after{
+    content: ", ";
+}
+
+/*NOT Appending a , for the category item in restaurant info */
+.cat-item:last-child:after{
+    content: "";
+}
+
 .rating-cost{
     width:100%;
 }
@@ -88,18 +98,22 @@
 }
 
 .menu-items {
+    margin:0;
+    padding:0;
     width:100%;
 }
 
-.veg-icon{
+.Veg{
     color:green;
 }
 
-.non-veg-icon{
+.Non-Veg{
     color:red;
 }
 
 .menu-item-name {
+    margin:0;
+    padding:0;
     text-transform: capitalize;
 }
     
@@ -126,7 +140,6 @@
 }
 
 .menu-item-name{
-    padding: 5%;
     color: grey;
     text-transform: capitalize;
 }
