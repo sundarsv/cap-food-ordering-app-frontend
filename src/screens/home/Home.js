@@ -82,7 +82,7 @@ class Home extends Component {
         let xhr = new XMLHttpRequest();
         let that = this;
 
-        console.log("baseurl : " + this.props.baseUrl + resourcePath);
+      //  console.log("baseurl : " + this.props.baseUrl + resourcePath);
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4 && this.status === 200) {
                 that.setState({
@@ -90,7 +90,7 @@ class Home extends Component {
                 });
             } else {
                 that.setState({errorResponse: this.responseText});
-                console.log(this.responseText);
+              //  console.log(this.responseText);
             }
         });
 
@@ -112,7 +112,7 @@ class Home extends Component {
         return (
             <div>
                 <div>
-                    <Header {...this.props} onChange={this.searchChangeHandler}/>
+                    <Header {...this.props} onChange={this.searchChangeHandler} isHomePage={true}/>
                 </div>
                 <Grid
                       container

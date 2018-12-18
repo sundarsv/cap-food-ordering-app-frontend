@@ -116,7 +116,7 @@ class Details extends Component {
         const { classes } = this.props;
         return (
             <div className="details-container">
-                <Header />
+                <Header {...this.props}/>
                 <div className="restaurant-info">
                     <div className="restaurant-image">
                         <img height="200px" width="auto" src={restaurant.photoUrl} />
