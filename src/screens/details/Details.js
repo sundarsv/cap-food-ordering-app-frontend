@@ -3,8 +3,8 @@ import '../details/Details.css';
 import Header from '../../common/header/Header';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faCircle, faRupeeSign, faStopCircle} from '@fortawesome/free-solid-svg-icons';
-// import {faStopCircle} from '@fortawesome/free-regular-svg-icons';
+import { faStar, faCircle, faRupeeSign} from '@fortawesome/free-solid-svg-icons';
+import {faStopCircle} from '@fortawesome/free-regular-svg-icons';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
@@ -216,7 +216,7 @@ class Details extends Component {
                                 <table className="cart-table" width="100%">
                                         <tr height='10px'>
                                             <td width="10%" className="veg-or-non-veg-icon">
-                                                <FontAwesomeIcon className={cartItem.type} icon="circle" /> 
+                                                <FontAwesomeIcon className={cartItem.type} icon={["far", "stop-circle"]} /> 
                                             </td>
                                             <td width="30%" className="menu-item-name">
                                                 {cartItem.itemName}
