@@ -129,45 +129,48 @@ class Checkout extends Component {
             this.props.history.push('/');
         }
         else {
+            let resourcePath = "/api/address/" + user;
+            let resourcePath1 = "/api/payment/";
+            let resourcePath2 = "/api/states/";
             let data = null;
             let xhr = new XMLHttpRequest();
             let xhr1 = new XMLHttpRequest();
             let xhr2 = new XMLHttpRequest();
             let that = this;
-        
+            console.log("baseurl : " + this.props.baseUrl + resourcePath);
             xhr.addEventListener("readystatechange", function () {
-                if (this.readyState === 4) {
+                if (this.readyState === 4 && this.status === 200) {
                     that.setState({
                         addresses : JSON.parse(this.responseText)             
                     });         
                 }
             });
 
-            xhr.open("GET", "http://localhost:8085/api/address/user");
+            xhr.open("GET", this.props.baseUrl + resourcePath);
             xhr.setRequestHeader("accessToken", sessionStorage.getItem("access-token"));
             xhr.send(data);
 
             xhr1.addEventListener("readystatechange", function () {
-                if (this.readyState === 4) {
+                if (this.readyState === 4 && this.status === 200) {
                     that.setState({
                         paymentModes : JSON.parse(this.responseText)             
                     });         
                 }
             });
 
-            xhr1.open("GET", "http://localhost:8085/api/payment");
+            xhr1.open("GET", this.props.baseUrl + resourcePath1);
             xhr1.setRequestHeader("accessToken", sessionStorage.getItem("access-token"));
             xhr1.send(data);
 
             xhr2.addEventListener("readystatechange", function () {
-                if (this.readyState === 4) {
+                if (this.readyState === 4 && this.status === 200) {
                     that.setState({
                         states : JSON.parse(this.responseText)             
                     });
                 }
             });
 
-            xhr2.open("GET", "http://localhost:8085/api/states");
+            xhr2.open("GET", this.props.baseUrl + resourcePath2);
             xhr2.send(data);
         }
 
@@ -293,13 +296,14 @@ class Checkout extends Component {
     }
 
     confirmOrderHandler = () => {
+        let resourcePath3 = "/api/order/";
         let xhr = new XMLHttpRequest();
         let that = this;
         var address = this.state.selectedAddress;
         var parameters="adrressId="+address.id+"&flatBuilNo="+address.flatBuilNo+"&locality="+address.locality+"&city="+address.city
         +"&zipcode="+address.zipcode+"&stateId="+address.state.id+"&bill="+this.state.totalCartItemsValue;
         xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
+            if (this.readyState === 4 && this.status === 200) {
                 that.setState({
                     open:true,
                     orderNotificationMessage : "Your order has been placed successfully!"            
@@ -313,7 +317,7 @@ class Checkout extends Component {
              }
         });
         
-        xhr.open("GET", "http://localhost:8085/api/order");
+        xhr.open("GET", this.props.baseUrl + resourcePath3);
         xhr.send(parameters);
 
     }
@@ -539,5 +543,4 @@ class Checkout extends Component {
         </div>
     )}
 }
-
-export default Checkout;
+export default withStyles(styles)(Checkout);
