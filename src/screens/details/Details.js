@@ -96,7 +96,6 @@ class Details extends Component {
 
     /* Function to calculate the Total Cart Amount*/
     totalAmountCalc (itemValue) {
-        itemValue = this.state.totalCartValue + itemValue
         this.setState({totalCartValue: this.state.totalCartValue + itemValue})
     }
 
@@ -189,7 +188,7 @@ class Details extends Component {
                                             {item.itemName}
                                         </td>
                                         <td width="30%">
-                                            <FontAwesomeIcon icon="rupee-sign"/> {item.price}
+                                            <FontAwesomeIcon icon="rupee-sign"/> {(item.price).toFixed(2)}
                                         </td>
                                         <td>
                                             <IconButton className={classes.button} onClick={() => this.addButtonClickHandler(item)} >
@@ -236,7 +235,7 @@ class Details extends Component {
                                                 </IconButton>
                                             </td>
                                             <td width="40%" className="menu-item-amount">
-                                                <FontAwesomeIcon icon="rupee-sign"/> {cartItem.cartPrice}
+                                                <FontAwesomeIcon icon="rupee-sign"/> {(cartItem.cartPrice).toFixed(2)}
                                             </td>
                                         </tr>
                                     </table>
@@ -244,7 +243,7 @@ class Details extends Component {
                                     <table class="cart-table" width="100%">
                                         <tr>
                                             <td className="bold" width="70%">TOTAL AMOUNT</td>
-                                            <td className="total-amount"><FontAwesomeIcon icon="rupee-sign"/> {totalCartValue}</td>
+                                            <td className="total-amount"><FontAwesomeIcon icon="rupee-sign"/> {(totalCartValue).toFixed(2)}</td>
                                         </tr>
                                     </table>
                                 <div className="cart-button">

@@ -134,11 +134,6 @@
     padding: 0 5% 0 4%;
 }
 
-.cart-table > tr {
-    margin: 0px;
-    padding: 0px;
-}
-
 .cart-heading {
     font-size: 120%;
     font-weight: bold;
