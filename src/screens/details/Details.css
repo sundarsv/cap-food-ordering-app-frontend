@@ -131,7 +131,12 @@
 }
 
 .cart-table{
-    padding: 0 2% 0 4%;
+    padding: 0 5% 0 4%;
+}
+
+.cart-table > tr {
+    margin: 0px;
+    padding: 0px;
 }
 
 .cart-heading {
@@ -144,8 +149,13 @@
     text-transform: capitalize;
 }
 
+.cart-item-qty {
+    text-align: center;
+}
+
 .menu-item-amount{
     color:grey;    
+    text-align: right;
 }
 
 .total-amount-heading {
@@ -156,6 +166,7 @@
 .total-amount {
     margin: 5%;
     font-weight:bold;
+    text-align: right;
 }
 
 .cart-button {

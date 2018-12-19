@@ -57,7 +57,6 @@ class Details extends Component {
     componentWillMount() {
         let xhr = new XMLHttpRequest();
         let that = this;
-        console.log("baseurl : " + this.props.baseUrl + "/restaurant/" + this.props.match.params.restaurantID);
         xhr.addEventListener("readystatechange", function(){
             if(this.readyState == 4 && this.status === 200) {
                 that.setState({
@@ -97,8 +96,7 @@ class Details extends Component {
 
     /* Function to calculate the Total Cart Amount*/
     totalAmountCalc (itemValue) {
-        console.log(itemValue)
-        console.log(this.state.totalCartValue)
+        itemValue = this.state.totalCartValue + itemValue
         this.setState({totalCartValue: this.state.totalCartValue + itemValue})
     }
 
@@ -142,14 +140,13 @@ class Details extends Component {
         const categories = this.state.categories;
         const cartItems = this.state.cartItems;
         const totalCartValue = this.state.totalCartValue;
-        console.log(totalCartValue);
         const { classes } = this.props;
         return (
             <div className="details-container">
                 <Header />
                 <div className="restaurant-info">
                     <div className="restaurant-image">
-                        <img height="200px" width="auto" src={restaurant.photoUrl} />
+                        <img height="200px" width="auto" src={restaurant.photoUrl}  />
                     </div>
                     <div className="restaurant-details">
                         <p className="restaurant-title">{restaurant.restaurantName}</p>
@@ -218,7 +215,7 @@ class Details extends Component {
                             </div>
                             {cartItems.map((cartItem) => 
                                 <table className="cart-table" width="100%">
-                                        <tr>
+                                        <tr height='10px'>
                                             <td width="10%" className="veg-or-non-veg-icon">
                                                 <FontAwesomeIcon className={cartItem.type} icon="circle" /> 
                                             </td>
@@ -230,7 +227,7 @@ class Details extends Component {
                                                     <Remove />
                                                 </IconButton>
                                             </td>
-                                            <td width="5%">
+                                            <td width="5%" className="cart-item-qty">
                                                 {cartItem.quantity}
                                             </td>
                                             <td width="5%">
