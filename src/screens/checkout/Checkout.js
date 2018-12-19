@@ -76,6 +76,14 @@ const styles = theme => ({
     }
 });
 
+function getSteps() {
+  return ['Delivery', 'Payment'];
+}
+
+function isNum(val) {
+    return /^\d+$/.test(val);
+}
+
 class Checkout extends Component {
     
     constructor() {
