@@ -48,7 +48,8 @@ class Details extends Component {
             snackBarOpen:false,
             snackBarMessage:"",
             cartCounter:0,
-            cartItems: []
+            cartItems: [],
+            totalCartValue: 0.00
         }
     }
 
@@ -74,27 +75,31 @@ class Details extends Component {
         xhr.send();
     }
 
-    /* Function to add an item to cart */
+    /* Function to add an item to cart AND to increase the quantity if the item is already in the cart*/
     addButtonClickHandler(item) {
         var found = this.state.cartItems.findIndex(cartItem => cartItem.id==item.id)
         const updatedItem = this.state.cartItems.slice()
         if (found == -1) {
             console.log("entering if stt")
             item.quantity = 1;
+            item.cartPrice = item.price;
             updatedItem.push(item)
             console.log(updatedItem)
         } else {
             console.log("else statement")
             updatedItem[found].quantity++
-            updatedItem[found].price = updatedItem[found].price*updatedItem[found].quantity
+            updatedItem[found].cartPrice = item.price*updatedItem[found].quantity
         }
         this.setState({cartItems:updatedItem})
         this.setState({cartCounter: this.state.cartCounter +1});
         this.setState({snackBarOpen: true});
         this.setState({snackBarMessage:"Item added to cart!"})
+        this.state.cartItems.forEach(cartItem => {
+            this.setState({totalCartValue: this.state.totalCartValue + cartItem.cartPrice})
+        });
     }
 
-    /* Function to decrease an item's quantity in cart */
+    /* Function to decrease an item's quantity in cart AND to remove the item from the cart if the quantity is just 1 */
     removeButtonClickHandler(item) {
         var found = this.state.cartItems.findIndex(cartItem => cartItem.id==item.id)
         const updatedItem = this.state.cartItems.slice()
@@ -104,12 +109,15 @@ class Details extends Component {
             this.setState({snackBarMessage: "Item removed from cart!"});
         } else {
             updatedItem[found].quantity--
-            updatedItem[found].price = updatedItem[found].price*updatedItem[found].quantity
+            updatedItem[found].cartPrice = item.price*updatedItem[found].quantity
             this.setState({snackBarOpen: true});
             this.setState({snackBarMessage: "Item quantity decreased by 1!"});
         }
         this.setState({cartItems:updatedItem})
         this.setState({cartCounter: this.state.cartCounter -1});
+        this.state.cartItems.forEach(cartItem => {
+            this.setState({totalCartValue: this.state.totalCartValue - cartItem.cartPrice})
+        });
     }
 
     /* Function to close snack bar */
@@ -130,6 +138,7 @@ class Details extends Component {
         const address = this.state.address;
         const categories = this.state.categories;
         const cartItems = this.state.cartItems;
+        const totalCartValue = this.state.totalCartValue;
         console.log(cartItems);
         const { classes } = this.props;
         return (
@@ -227,7 +236,7 @@ class Details extends Component {
                                                 </IconButton>
                                             </td>
                                             <td className="menu-item-amount">
-                                                <FontAwesomeIcon icon="rupee-sign"/> {cartItem.price}
+                                                <FontAwesomeIcon icon="rupee-sign"/> {cartItem.cartPrice}
                                             </td>
                                         </tr>
                                     </table>
@@ -235,7 +244,7 @@ class Details extends Component {
                                     <table class="cart-table" width="100%">
                                         <tr>
                                             <td className="bold" width="70%">TOTAL AMOUNT</td>
-                                            <td className="total-amount"><FontAwesomeIcon icon="rupee-sign"/> 500.00</td>
+                                            <td className="total-amount"><FontAwesomeIcon icon="rupee-sign"/> {totalCartValue}</td>
                                         </tr>
                                     </table>
                                 <div className="cart-button">
