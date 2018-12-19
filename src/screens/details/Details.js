@@ -49,7 +49,7 @@ class Details extends Component {
             snackBarMessage:"",
             cartCounter:0,
             cartItems: [],
-            totalCartValue: 0.00
+            totalCartValue: 0
         }
     }
 
@@ -80,23 +80,26 @@ class Details extends Component {
         var found = this.state.cartItems.findIndex(cartItem => cartItem.id==item.id)
         const updatedItem = this.state.cartItems.slice()
         if (found == -1) {
-            console.log("entering if stt")
             item.quantity = 1;
             item.cartPrice = item.price;
             updatedItem.push(item)
-            console.log(updatedItem)
+            this.totalAmountCalc(item.cartPrice)
         } else {
-            console.log("else statement")
             updatedItem[found].quantity++
             updatedItem[found].cartPrice = item.price*updatedItem[found].quantity
+            this.totalAmountCalc(item.price)         
         }
         this.setState({cartItems:updatedItem})
-        this.setState({cartCounter: this.state.cartCounter +1});
+        this.setState({cartCounter: this.state.cartCounter +1})
         this.setState({snackBarOpen: true});
         this.setState({snackBarMessage:"Item added to cart!"})
-        this.state.cartItems.forEach(cartItem => {
-            this.setState({totalCartValue: this.state.totalCartValue + cartItem.cartPrice})
-        });
+    }
+
+    /* Function to calculate the Total Cart Amount*/
+    totalAmountCalc (itemValue) {
+        console.log(itemValue)
+        console.log(this.state.totalCartValue)
+        this.setState({totalCartValue: this.state.totalCartValue + itemValue})
     }
 
     /* Function to decrease an item's quantity in cart AND to remove the item from the cart if the quantity is just 1 */
@@ -139,7 +142,7 @@ class Details extends Component {
         const categories = this.state.categories;
         const cartItems = this.state.cartItems;
         const totalCartValue = this.state.totalCartValue;
-        console.log(cartItems);
+        console.log(totalCartValue);
         const { classes } = this.props;
         return (
             <div className="details-container">
@@ -216,26 +219,26 @@ class Details extends Component {
                             {cartItems.map((cartItem) => 
                                 <table className="cart-table" width="100%">
                                         <tr>
-                                            <td className="veg-or-non-veg-icon">
+                                            <td width="10%" className="veg-or-non-veg-icon">
                                                 <FontAwesomeIcon className={cartItem.type} icon="circle" /> 
                                             </td>
-                                            <td className="menu-item-name">
+                                            <td width="30%" className="menu-item-name">
                                                 {cartItem.itemName}
                                             </td>
-                                            <td >
+                                            <td width="5%">
                                                 <IconButton onClick={() => this.removeButtonClickHandler(cartItem)} >
                                                     <Remove />
                                                 </IconButton>
                                             </td>
-                                            <td >
+                                            <td width="5%">
                                                 {cartItem.quantity}
                                             </td>
-                                            <td >
+                                            <td width="5%">
                                                 <IconButton onClick={() => this.addButtonClickHandler(cartItem)} >
                                                     <Add />
                                                 </IconButton>
                                             </td>
-                                            <td className="menu-item-amount">
+                                            <td width="40%" className="menu-item-amount">
                                                 <FontAwesomeIcon icon="rupee-sign"/> {cartItem.cartPrice}
                                             </td>
                                         </tr>
