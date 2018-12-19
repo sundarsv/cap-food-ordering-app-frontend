@@ -48,7 +48,7 @@ class Details extends Component {
             snackBarOpen:false,
             snackBarMessage:"",
             cartCounter:0,
-            cartItems: [{}]
+            cartItems: []
         }
     }
 
@@ -76,32 +76,40 @@ class Details extends Component {
 
     /* Function to add an item to cart */
     addButtonClickHandler(item) {
-            /*This IF stt is to add first item to cart*/
-            if (this.state.cartItems.length == 1) {
-                console.log("entering if stt");
-                this.setState({cartItems: item});
-                this.state.cartItems.push(item.quantity = 1);
-                this.setState({cartCounter: this.state.cartCounter +1});
-                this.setState({snackBarOpen: true});
-                this.setState({snackBarMessage:"Item added to cart!"})
-            } 
-        console.log(this.state.cartItems);
-    }
-
-    /* Function to increase an item's quantity in cart */
-    cartAddButtonClickHandler = event => {
+        var found = this.state.cartItems.findIndex(cartItem => cartItem.id==item.id)
+        const updatedItem = this.state.cartItems.slice()
+        if (found == -1) {
+            console.log("entering if stt")
+            item.quantity = 1;
+            updatedItem.push(item)
+            console.log(updatedItem)
+        } else {
+            console.log("else statement")
+            updatedItem[found].quantity++
+            updatedItem[found].price = updatedItem[found].price*updatedItem[found].quantity
+        }
+        this.setState({cartItems:updatedItem})
+        this.setState({cartCounter: this.state.cartCounter +1});
         this.setState({snackBarOpen: true});
-        this.setState({snackBarMessage: "Item quantity increased by 1!"});
-        this.setState({cartCounter: this.state.cartCounter ++});
+        this.setState({snackBarMessage:"Item added to cart!"})
     }
 
     /* Function to decrease an item's quantity in cart */
-    cartRemoveButtonClickHandler = event => {
-        if (this.state.cartCounter > 0) { 
+    removeButtonClickHandler(item) {
+        var found = this.state.cartItems.findIndex(cartItem => cartItem.id==item.id)
+        const updatedItem = this.state.cartItems.slice()
+        if (item.quantity == 1) {
+            updatedItem.splice(found, 1)
+            this.setState({snackBarOpen: true});
+            this.setState({snackBarMessage: "Item removed from cart!"});
+        } else {
+            updatedItem[found].quantity--
+            updatedItem[found].price = updatedItem[found].price*updatedItem[found].quantity
             this.setState({snackBarOpen: true});
             this.setState({snackBarMessage: "Item quantity decreased by 1!"});
-            this.setState({cartCounter: this.state.cartCounter -1});
         }
+        this.setState({cartItems:updatedItem})
+        this.setState({cartCounter: this.state.cartCounter -1});
     }
 
     /* Function to close snack bar */
@@ -196,32 +204,34 @@ class Details extends Component {
                                     </Badge>
                                     <span className="cart-heading">My Cart</span>
                             </div>
-                            <table className="cart-table" width="100%">
+                            {cartItems.map((cartItem) => 
+                                <table className="cart-table" width="100%">
                                         <tr>
                                             <td className="veg-or-non-veg-icon">
-                                                <FontAwesomeIcon className="veg-icon" icon="circle" /> 
+                                                <FontAwesomeIcon className={cartItem.type} icon="circle" /> 
                                             </td>
                                             <td className="menu-item-name">
-                                                Pizza indiana
+                                                {cartItem.itemName}
                                             </td>
                                             <td >
-                                                <IconButton onClick={this.removeButtonClickHandler} >
+                                                <IconButton onClick={() => this.removeButtonClickHandler(cartItem)} >
                                                     <Remove />
                                                 </IconButton>
                                             </td>
                                             <td >
-                                                1
+                                                {cartItem.quantity}
                                             </td>
                                             <td >
-                                                <IconButton onClick={this.addButtonClickHandler} >
+                                                <IconButton onClick={() => this.addButtonClickHandler(cartItem)} >
                                                     <Add />
                                                 </IconButton>
                                             </td>
                                             <td className="menu-item-amount">
-                                                <FontAwesomeIcon icon="rupee-sign"/> 500.00
+                                                <FontAwesomeIcon icon="rupee-sign"/> {cartItem.price}
                                             </td>
                                         </tr>
                                     </table>
+                                    )}
                                     <table class="cart-table" width="100%">
                                         <tr>
                                             <td className="bold" width="70%">TOTAL AMOUNT</td>
