@@ -129,9 +129,9 @@ class Checkout extends Component {
             this.props.history.push('/');
         }
         else {
-            let resourcePath = "/api/address/" + user;
-            let resourcePath1 = "/api/payment/";
-            let resourcePath2 = "/api/states/";
+            let resourcePath = "/address/user";
+            let resourcePath1 = "/payment/";
+            let resourcePath2 = "/states/";
             let data = null;
             let xhr = new XMLHttpRequest();
             let xhr1 = new XMLHttpRequest();
@@ -326,6 +326,7 @@ class Checkout extends Component {
         const { classes } = this.props;
         const steps = getSteps();
         const { activeStep } = this.state;
+        const {cartItems, totalCartValue} = this.props.location;
         return (
             <div className="checkout">
                 <Header showSearch="false"/>
@@ -492,7 +493,7 @@ class Checkout extends Component {
                                     <Typography style={{marginLeft:'40px',fontWeight:'bold',marginBottom:'30px'}} gutterBottom variant="h5" component="h2">
                                         Summary
                                     </Typography>
-                                    {this.props.location.state.cartItems.map(item => (
+                                    {cartItems.map(item => (
                                         <div className="order-body-container" key={"item" + item.id}>
                                             <div className="div-container div-items">{item.type === 'Veg' &&
                                                 <FontAwesomeIcon icon="circle" className="veg-item-color"/>}
@@ -506,7 +507,7 @@ class Checkout extends Component {
                                     <Divider/>
                                     <div className="body-container">
                                     <span style={{fontWeight:'bold'}} className="div-container div-items">Net Amount </span>
-                                    <span className="rupee-container"><FontAwesomeIcon icon="rupee-sign" /> {this.props.location.state.totalCartItemsValue}</span>
+                                    <span className="rupee-container"><FontAwesomeIcon icon="rupee-sign" /> {totalCartValue}</span>
                                     </div>
                                     <br />
                                     <Button className="button-container" style={{marginLeft:'55px'}} variant="contained" onClick={this.confirmOrderHandler} color="primary">

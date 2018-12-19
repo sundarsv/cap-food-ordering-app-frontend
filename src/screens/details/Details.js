@@ -127,10 +127,23 @@ class Details extends Component {
 
     /* Function to open snack bar */
     checkoutButtonClickHandler = event => {
-        if (this.state.cartCounter == 0) {
+        if (this.state.cartCounter === 0 && this.state.cartItems.length === 0) {
             this.setState({snackBarOpen: true});
             this.setState({snackBarMessage: "Please add an item to your cart!"});
+            return;
         }
+
+        if(sessionStorage.getItem("access-token" ) === null){
+            this.setState({snackBarOpen: true});
+            this.setState({snackBarMessage: "Please login first!"});
+            return;
+        }
+        console.log("calling checkout................")
+        this.props.history.push({
+            pathname: "/checkout",
+            cartItems: this.state.cartItems,
+            totalCartValue :this.state.totalCartValue
+        });
     }
 
     render() {
@@ -139,7 +152,6 @@ class Details extends Component {
         const categories = this.state.categories;
         const cartItems = this.state.cartItems;
         const totalCartValue = this.state.totalCartValue;
-        console.log(cartItems);
         const { classes } = this.props;
         return (
             <div className="details-container">
