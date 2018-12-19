@@ -374,7 +374,7 @@ class Checkout extends Component {
                                 <div className="dispFlex">
                                 <FormControl required>
                                     <InputLabel htmlFor="flat">Flat/Building No.</InputLabel>
-                                    <Input id="flat" type="text" flat={this.state.flat}
+                                    <Input id="flat" type="text" flat={this.state.flat} defaultValue={this.state.flat}
                                         onChange={this.inputFlatChangeHandler} />
                                     <FormHelperText className={this.state.flatRequired}>
                                         <span className="red">required</span>
@@ -383,7 +383,7 @@ class Checkout extends Component {
                                 <br /><br />
                                 <FormControl required>
                                     <InputLabel htmlFor="locality">Locality</InputLabel>
-                                    <Input id="locality" locality={this.state.locality}
+                                    <Input id="locality" locality={this.state.locality} defaultValue={this.state.locality}
                                         onChange={this.inputLocalityChangeHandler} />
                                     <FormHelperText className={this.state.localityRequired}>
                                         <span className="red">required</span>
@@ -392,7 +392,7 @@ class Checkout extends Component {
                                 <br /><br />
                                 <FormControl required>
                                     <InputLabel htmlFor="city">City</InputLabel>
-                                    <Input id="city" city={this.state.city}
+                                    <Input id="city" city={this.state.city} defaultValue={this.state.city}
                                         onChange={this.inputCityChangeHandler} />
                                     <FormHelperText className={this.state.cityRequired}>
                                         <span className="red">required</span>
@@ -418,7 +418,7 @@ class Checkout extends Component {
                                 <br /><br />
                                 <FormControl required>
                                     <InputLabel htmlFor="zipcode">Zipcode</InputLabel>
-                                    <Input id="zipcode" zipcode={this.state.zipcode}
+                                    <Input id="zipcode" zipcode={this.state.zipcode} defaultValue={this.state.zipcode}
                                         onChange={this.inputZipcodeChangeHandler} />
                                     <FormHelperText className={this.state.zipcodeRequired}>
                                         <span className="red">required</span>
@@ -446,7 +446,7 @@ class Checkout extends Component {
                                     >
                                     {this.state.paymentModes.map((payment) => {
                                         return (
-                                        <FormControlLabel key={payment.id} value={payment.paymentName} control={<Radio />} label={payment.paymentName} />
+                                        <FormControlLabel key={payment.id} value={payment.paymentName} defaultValue={payment.paymentName} control={<Radio />} label={payment.paymentName} />
                                         )
                                     })}
                                     </RadioGroup>
@@ -487,7 +487,7 @@ class Checkout extends Component {
         </div>
 
             <div className="orderSummary">
-                            <Card style={{height:'70%'}}>
+                            <Card style={{height:'100%'}}>
                                 <CardContent>
                                     <Typography style={{marginLeft:'40px',fontWeight:'bold',marginBottom:'30px'}} gutterBottom variant="h5" component="h2">
                                         Summary
@@ -541,6 +541,6 @@ class Checkout extends Component {
 
           </div>
         </div>
-    )}
+     )}
 }
 export default withStyles(styles)(Checkout);
