@@ -129,45 +129,48 @@ class Checkout extends Component {
             this.props.history.push('/');
         }
         else {
+            let resourcePath = "/api/address/" + user;
+            let resourcePath1 = "/api/payment/";
+            let resourcePath2 = "/api/states/";
             let data = null;
             let xhr = new XMLHttpRequest();
             let xhr1 = new XMLHttpRequest();
             let xhr2 = new XMLHttpRequest();
             let that = this;
-        
+            console.log("baseurl : " + this.props.baseUrl + resourcePath);
             xhr.addEventListener("readystatechange", function () {
-                if (this.readyState === 4) {
+                if (this.readyState === 4 && this.status === 200) {
                     that.setState({
                         addresses : JSON.parse(this.responseText)             
                     });         
                 }
             });
 
-            xhr.open("GET", "http://localhost:8085/api/address/user");
+            xhr.open("GET", this.props.baseUrl + resourcePath);
             xhr.setRequestHeader("accessToken", sessionStorage.getItem("access-token"));
             xhr.send(data);
 
             xhr1.addEventListener("readystatechange", function () {
-                if (this.readyState === 4) {
+                if (this.readyState === 4 && this.status === 200) {
                     that.setState({
                         paymentModes : JSON.parse(this.responseText)             
                     });         
                 }
             });
 
-            xhr1.open("GET", "http://localhost:8085/api/payment");
+            xhr1.open("GET", this.props.baseUrl + resourcePath1);
             xhr1.setRequestHeader("accessToken", sessionStorage.getItem("access-token"));
             xhr1.send(data);
 
             xhr2.addEventListener("readystatechange", function () {
-                if (this.readyState === 4) {
+                if (this.readyState === 4 && this.status === 200) {
                     that.setState({
                         states : JSON.parse(this.responseText)             
                     });
                 }
             });
 
-            xhr2.open("GET", "http://localhost:8085/api/states");
+            xhr2.open("GET", this.props.baseUrl + resourcePath2);
             xhr2.send(data);
         }
 
@@ -293,13 +296,14 @@ class Checkout extends Component {
     }
 
     confirmOrderHandler = () => {
+        let resourcePath3 = "/api/order/";
         let xhr = new XMLHttpRequest();
         let that = this;
         var address = this.state.selectedAddress;
         var parameters="adrressId="+address.id+"&flatBuilNo="+address.flatBuilNo+"&locality="+address.locality+"&city="+address.city
         +"&zipcode="+address.zipcode+"&stateId="+address.state.id+"&bill="+this.state.totalCartItemsValue;
         xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
+            if (this.readyState === 4 && this.status === 200) {
                 that.setState({
                     open:true,
                     orderNotificationMessage : "Your order has been placed successfully!"            
@@ -313,7 +317,7 @@ class Checkout extends Component {
              }
         });
         
-        xhr.open("GET", "http://localhost:8085/api/order");
+        xhr.open("GET", this.props.baseUrl + resourcePath3);
         xhr.send(parameters);
 
     }
@@ -370,7 +374,7 @@ class Checkout extends Component {
                                 <div className="dispFlex">
                                 <FormControl required>
                                     <InputLabel htmlFor="flat">Flat/Building No.</InputLabel>
-                                    <Input id="flat" type="text" flat={this.state.flat}
+                                    <Input id="flat" type="text" flat={this.state.flat} defaultValue={this.state.flat}
                                         onChange={this.inputFlatChangeHandler} />
                                     <FormHelperText className={this.state.flatRequired}>
                                         <span className="red">required</span>
@@ -379,7 +383,7 @@ class Checkout extends Component {
                                 <br /><br />
                                 <FormControl required>
                                     <InputLabel htmlFor="locality">Locality</InputLabel>
-                                    <Input id="locality" locality={this.state.locality}
+                                    <Input id="locality" locality={this.state.locality} defaultValue={this.state.locality}
                                         onChange={this.inputLocalityChangeHandler} />
                                     <FormHelperText className={this.state.localityRequired}>
                                         <span className="red">required</span>
@@ -388,7 +392,7 @@ class Checkout extends Component {
                                 <br /><br />
                                 <FormControl required>
                                     <InputLabel htmlFor="city">City</InputLabel>
-                                    <Input id="city" city={this.state.city}
+                                    <Input id="city" city={this.state.city} defaultValue={this.state.city}
                                         onChange={this.inputCityChangeHandler} />
                                     <FormHelperText className={this.state.cityRequired}>
                                         <span className="red">required</span>
@@ -414,7 +418,7 @@ class Checkout extends Component {
                                 <br /><br />
                                 <FormControl required>
                                     <InputLabel htmlFor="zipcode">Zipcode</InputLabel>
-                                    <Input id="zipcode" zipcode={this.state.zipcode}
+                                    <Input id="zipcode" zipcode={this.state.zipcode} defaultValue={this.state.zipcode}
                                         onChange={this.inputZipcodeChangeHandler} />
                                     <FormHelperText className={this.state.zipcodeRequired}>
                                         <span className="red">required</span>
@@ -442,7 +446,7 @@ class Checkout extends Component {
                                     >
                                     {this.state.paymentModes.map((payment) => {
                                         return (
-                                        <FormControlLabel key={payment.id} value={payment.paymentName} control={<Radio />} label={payment.paymentName} />
+                                        <FormControlLabel key={payment.id} value={payment.paymentName} defaultValue={payment.paymentName} control={<Radio />} label={payment.paymentName} />
                                         )
                                     })}
                                     </RadioGroup>
@@ -483,7 +487,7 @@ class Checkout extends Component {
         </div>
 
             <div className="orderSummary">
-                            <Card style={{height:'70%'}}>
+                            <Card style={{height:'100%'}}>
                                 <CardContent>
                                     <Typography style={{marginLeft:'40px',fontWeight:'bold',marginBottom:'30px'}} gutterBottom variant="h5" component="h2">
                                         Summary
@@ -537,7 +541,6 @@ class Checkout extends Component {
 
           </div>
         </div>
-    )}
+     )}
 }
-
-export default Checkout;
+export default withStyles(styles)(Checkout);
