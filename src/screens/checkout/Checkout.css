@@ -21,7 +21,7 @@
 }
 
 .veg-item-color{
- color: green;
+    color: green;
 }
 
 .non-veg-color{
@@ -31,6 +31,7 @@
 .main-body-container {
     display: flex;
     justify-content: space-between;
+    height: 100%;
 }
 
 .body-container {
@@ -54,6 +55,17 @@
 
 .div-items {
     min-width: 180px;
+}
+
+
+.dispNone {
+    display: none;
+}
+
+.dispBlock {
+    display: block;
+    border-radius: 4px;
+    background-color: #c0c0c0;
 }
 
 .orderSummary {

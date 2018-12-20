@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import '../details/Details.css';
 import Header from '../../common/header/Header';
-import {library} from '@fortawesome/fontawesome-svg-core';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faStar, faCircle, faRupeeSign} from '@fortawesome/free-solid-svg-icons';
- import {faStopCircle} from '@fortawesome/free-regular-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar, faCircle, faRupeeSign} from '@fortawesome/free-solid-svg-icons';
+import {faStopCircle} from '@fortawesome/free-regular-svg-icons';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import {withStyles} from '@material-ui/core/styles';
@@ -154,6 +154,7 @@ class Details extends Component {
                 <Header {...this.props} isHomePage={false}/>
                 <div className="restaurant-info">
                     <div className="restaurant-image">
+
                         <img height="200px" width="auto" src={restaurant.photoUrl}  />
                     </div>
                     <div className="restaurant-details">
