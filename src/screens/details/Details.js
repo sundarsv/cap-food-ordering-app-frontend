@@ -7,14 +7,14 @@ import { faStar, faCircle, faRupeeSign} from '@fortawesome/free-solid-svg-icons'
 import {faStopCircle} from '@fortawesome/free-regular-svg-icons';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Add from '@material-ui/icons/Add';
 import Remove from '@material-ui/icons/Remove';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import CloseIcon from '@material-ui/icons/Close';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import Card from '@material-ui/core/Card';  
+import Card from '@material-ui/core/Card';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 
@@ -24,18 +24,16 @@ library.add(faStar, faCircle, faRupeeSign, faStopCircle)
 /* Styles for Material UI */
 const styles = theme => ({
     button: {
-      margin: theme.spacing.unit,
+        margin: theme.spacing.unit,
     },
     icon: {
-      margin: theme.spacing.unit,
+        margin: theme.spacing.unit,
     },
-    card: {
-        
-    },
+    card: {},
     badge: {
         margin: theme.spacing.unit * 2,
-      }
-  });
+    }
+});
 
 class Details extends Component {
 
@@ -45,9 +43,9 @@ class Details extends Component {
             restaurant: {},
             address: {},
             categories: [],
-            snackBarOpen:false,
-            snackBarMessage:"",
-            cartCounter:0,
+            snackBarOpen: false,
+            snackBarMessage: "",
+            cartCounter: 0,
             cartItems: [],
             totalCartValue: 0
         }
@@ -68,7 +66,7 @@ class Details extends Component {
             }
         });
 
-        xhr.open("GET", this.props.baseUrl + "/restaurant/" +  this.props.match.params.restaurantID);
+        xhr.open("GET", this.props.baseUrl + "/restaurant/" + this.props.match.params.restaurantID);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.setRequestHeader("Cache-Control", "no-cache");
         xhr.send();
@@ -76,7 +74,7 @@ class Details extends Component {
 
     /* Function to add an item to cart AND to increase the quantity if the item is already in the cart*/
     addButtonClickHandler(item) {
-        var found = this.state.cartItems.findIndex(cartItem => cartItem.id==item.id)
+        var found = this.state.cartItems.findIndex(cartItem => cartItem.id == item.id)
         const updatedItem = this.state.cartItems.slice()
         if (found == -1) {
             item.quantity = 1;
@@ -85,13 +83,13 @@ class Details extends Component {
             this.totalAmountCalc(item.cartPrice)
         } else {
             updatedItem[found].quantity++
-            updatedItem[found].cartPrice = item.price*updatedItem[found].quantity
+            updatedItem[found].cartPrice = item.price * updatedItem[found].quantity
             this.totalAmountCalc(item.price)
         }
-        this.setState({cartItems:updatedItem})
-        this.setState({cartCounter: this.state.cartCounter +1})
+        this.setState({cartItems: updatedItem})
+        this.setState({cartCounter: this.state.cartCounter + 1})
         this.setState({snackBarOpen: true});
-        this.setState({snackBarMessage:"Item added to cart!"})
+        this.setState({snackBarMessage: "Item added to cart!"})
     }
 
     /* Function to calculate the Total Cart Amount*/
@@ -101,7 +99,7 @@ class Details extends Component {
 
     /* Function to decrease an item's quantity in cart AND to remove the item from the cart if the quantity is just 1 */
     removeButtonClickHandler(item) {
-        var found = this.state.cartItems.findIndex(cartItem => cartItem.id==item.id)
+        var found = this.state.cartItems.findIndex(cartItem => cartItem.id == item.id)
         const updatedItem = this.state.cartItems.slice()
         if (item.quantity == 1) {
             updatedItem.splice(found, 1)
@@ -109,12 +107,12 @@ class Details extends Component {
             this.setState({snackBarMessage: "Item removed from cart!"});
         } else {
             updatedItem[found].quantity--
-            updatedItem[found].cartPrice = item.price*updatedItem[found].quantity
+            updatedItem[found].cartPrice = item.price * updatedItem[found].quantity
             this.setState({snackBarOpen: true});
             this.setState({snackBarMessage: "Item quantity decreased by 1!"});
         }
-        this.setState({cartItems:updatedItem})
-        this.setState({cartCounter: this.state.cartCounter -1});
+        this.setState({cartItems: updatedItem})
+        this.setState({cartCounter: this.state.cartCounter - 1});
         this.state.cartItems.forEach(cartItem => {
             this.setState({totalCartValue: this.state.totalCartValue - cartItem.cartPrice})
         });
@@ -125,24 +123,22 @@ class Details extends Component {
         this.setState({snackBarOpen: false});
     }
 
-    /* Function to open snack bar */
+    /* Function to implement checkout functionality*/
     checkoutButtonClickHandler = event => {
         if (this.state.cartCounter === 0 && this.state.cartItems.length === 0) {
             this.setState({snackBarOpen: true});
             this.setState({snackBarMessage: "Please add an item to your cart!"});
             return;
         }
-
-        if(sessionStorage.getItem("access-token" ) === null){
+        if (sessionStorage.getItem("access-token") === null) {
             this.setState({snackBarOpen: true});
             this.setState({snackBarMessage: "Please login first!"});
             return;
         }
-        console.log("calling checkout................")
         this.props.history.push({
             pathname: "/checkout",
             cartItems: this.state.cartItems,
-            totalCartValue :this.state.totalCartValue
+            totalCartValue: this.state.totalCartValue
         });
     }
 
@@ -152,31 +148,33 @@ class Details extends Component {
         const categories = this.state.categories;
         const cartItems = this.state.cartItems;
         const totalCartValue = this.state.totalCartValue;
-        const { classes } = this.props;
+        const {classes} = this.props;
         return (
             <div className="details-container">
-                <Header {...this.props}/>
+                <Header {...this.props} isHomePage={false}/>
                 <div className="restaurant-info">
                     <div className="restaurant-image">
+
                         <img height="200px" width="auto" src={restaurant.photoUrl}  />
                     </div>
                     <div className="restaurant-details">
                         <p className="restaurant-title">{restaurant.restaurantName}</p>
                         <p className="restaurant-locality">{address.locality}</p>
                         <p className="restaurant-categories">
-                        {categories.map((cat) => 
-                            (
-                                <span className="cat-item" key={cat.id}>{cat.categoryName}</span>
-                            )
+                            {categories.map((cat) =>
+                                (
+                                    <span className="cat-item" key={cat.id}>{cat.categoryName}</span>
+                                )
                             )}
                         </p>
                         <div className="rating-cost">
                             <div className="restaurant-rating">
-                                <FontAwesomeIcon icon="star" /> {restaurant.userRating}
-                                <p className="sub-text">Average rating by <span className="bold">{restaurant.numberUsersRated}</span> users</p>
+                                <FontAwesomeIcon icon="star"/> {restaurant.userRating}
+                                <p className="sub-text">Average rating by <span
+                                    className="bold">{restaurant.numberUsersRated}</span> users</p>
                             </div>
                             <div className="restaurant-avg-cost">
-                                <FontAwesomeIcon icon="rupee-sign" /> {restaurant.avgPrice}
+                                <FontAwesomeIcon icon="rupee-sign"/> {restaurant.avgPrice}
                                 <p className="sub-text">Average cost for two people</p>
                             </div>
                         </div>
@@ -212,16 +210,17 @@ class Details extends Component {
                                     </table>
                                     )
                                     )}
-                            </div>
+                                </div>
                             ))}
                         </div>
                     </div>
                     <div className="cart-container">
                         <div className="cart-card-container">
                             <Card>
-                            <div className="card-card-heading">
-                                    <Badge className={classes.badge} badgeContent={this.state.cartCounter} color="primary">
-                                            <ShoppingCartIcon />
+                                <div className="card-card-heading">
+                                    <Badge className={classes.badge} badgeContent={this.state.cartCounter}
+                                           color="primary">
+                                        <ShoppingCartIcon/>
                                     </Badge>
                                     <span className="cart-heading">My Cart</span>
                             </div>
@@ -235,16 +234,16 @@ class Details extends Component {
                                                 {cartItem.itemName}
                                             </td>
                                             <td width="5%">
-                                                <IconButton onClick={() => this.removeButtonClickHandler(cartItem)} >
-                                                    <Remove />
+                                                <IconButton onClick={() => this.removeButtonClickHandler(cartItem)}>
+                                                    <Remove/>
                                                 </IconButton>
                                             </td>
                                             <td width="5%" className="cart-item-qty">
                                                 {cartItem.quantity}
                                             </td>
                                             <td width="5%">
-                                                <IconButton onClick={() => this.addButtonClickHandler(cartItem)} >
-                                                    <Add />
+                                                <IconButton onClick={() => this.addButtonClickHandler(cartItem)}>
+                                                    <Add/>
                                                 </IconButton>
                                             </td>
                                             <td width="40%" className="menu-item-amount">
@@ -260,10 +259,10 @@ class Details extends Component {
                                         </tr>
                                     </table>
                                 <div className="cart-button">
-                                        <Button variant="contained" color="primary" className="checkout-button"
+                                    <Button variant="contained" color="primary" className="checkout-button"
                                             onClick={this.checkoutButtonClickHandler}>
-                                            CHECKOUT
-                                        </Button>
+                                        CHECKOUT
+                                    </Button>
                                 </div>
                             </Card>
                         </div>
@@ -271,29 +270,29 @@ class Details extends Component {
 
                 </div>
                 <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                open={this.state.snackBarOpen}
-                autoHideDuration={6000}
-                onClose={this.handleClose}
-                >
-                <SnackbarContent
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.snackBarOpen}
+                    autoHideDuration={6000}
                     onClose={this.handleClose}
-                    message={this.state.snackBarMessage}
-                    action={[
-                        <IconButton
-                        key="close"
-                        aria-label="Close"
-                        color="inherit"
-                        className={classes.close}
-                        onClick={this.handleClose}
-                        >
-                        <CloseIcon className={classes.icon} />
-                        </IconButton>,
-                    ]}
-                />
+                >
+                    <SnackbarContent
+                        onClose={this.handleClose}
+                        message={this.state.snackBarMessage}
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="Close"
+                                color="inherit"
+                                className={classes.close}
+                                onClick={this.handleClose}
+                            >
+                                <CloseIcon className={classes.icon}/>
+                            </IconButton>,
+                        ]}
+                    />
                 </Snackbar>
             </div>
         )
