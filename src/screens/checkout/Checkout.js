@@ -184,7 +184,30 @@ class Checkout extends Component {
             selectedAddress: [],
             cartItems: [],
             paymentModes: [],
-            addresses: []
+            addresses: [
+                {
+                    "id": 1,
+                    "flatBuilNo": "A-201, Gandhigram",
+                    "locality": "150 feet ring road",
+                    "city": "Rajkot",
+                    "zipcode": "360007",
+                    "state": {
+                        "id": 9,
+                        "stateName": "Gujarat"
+                    }
+                },
+                {
+                    "id": 2,
+                    "flatBuilNo": "B-244, Radhe Park",
+                    "locality": "Bhadara",
+                    "city": "Jamnagar",
+                    "zipcode": "371601",
+                    "state": {
+                        "id": 4,
+                        "stateName": "Assam"
+                    }
+                }
+            ]
         }
     }
 
