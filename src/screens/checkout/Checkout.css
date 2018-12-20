@@ -18,7 +18,6 @@
 .order-body-container {
     display: flex;
     justify-content: flex-start;
-    
 }
 
 .veg-item-color{
@@ -33,7 +32,6 @@
     display: flex;
     justify-content: space-between;
     height: 100%;
-    
 }
 
 .body-container {
@@ -93,10 +91,6 @@
     color: green;
 }
 
-.grid {
-    
-}
-
 .button-container {
     margin-left: 70px;
     width: 350px;
@@ -120,7 +114,7 @@
 
 .order-body-container{
     width:100%;
-    
+
 }
 
 .div-items {
