@@ -228,7 +228,7 @@ class Details extends Component {
                                 <table className="cart-table" width="100%">
                                         <tr height='10px'>
                                             <td width="10%" className="veg-or-non-veg-icon">
-                                                <FontAwesomeIcon className={cartItem.type} icon={["far", "stop-circle"]} /> 
+                                                <FontAwesomeIcon className={cartItem.type} icon={["far", "stop-circle"]} />
                                             </td>
                                             <td width="30%" className="menu-item-name">
                                                 {cartItem.itemName}
