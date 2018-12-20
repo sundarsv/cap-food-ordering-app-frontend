@@ -1,5 +1,6 @@
 .form-control {
     width: 80%;
+
 }
 .category-menu {
     color: #ffffff!important;
@@ -9,7 +10,7 @@
     padding-right: 10%;
 }
 .app-header {
-    background-color: #708090;
+    background-color: #263238;
     color: #ffffff;
     padding: 8px 32px 8px 16px;
 }
@@ -23,7 +24,7 @@
 .inputInput {
     padding-left: 10%;
    width: 80%;
-
+    color: whitesmoke!important;
 }
 
 .tabs {
