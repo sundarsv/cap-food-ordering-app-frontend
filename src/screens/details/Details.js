@@ -56,7 +56,7 @@ class Details extends Component {
         let xhr = new XMLHttpRequest();
         let that = this;
         xhr.addEventListener("readystatechange", function(){
-            if(this.readyState == 4 && this.status === 200) {
+            if(this.readyState === 4 && this.status === 200) {
                 that.setState({
                     restaurant: JSON.parse(this.responseText),
                     address: JSON.parse(this.responseText).address,
@@ -74,9 +74,9 @@ class Details extends Component {
 
     /* Function to add an item to cart AND to increase the quantity if the item is already in the cart*/
     addButtonClickHandler(item) {
-        var found = this.state.cartItems.findIndex(cartItem => cartItem.id == item.id)
+        var found = this.state.cartItems.findIndex(cartItem => cartItem.id === item.id)
         const updatedItem = this.state.cartItems.slice()
-        if (found == -1) {
+        if (found === -1) {
             item.quantity = 1;
             item.cartPrice = item.price;
             updatedItem.push(item)
@@ -99,9 +99,9 @@ class Details extends Component {
 
     /* Function to decrease an item's quantity in cart AND to remove the item from the cart if the quantity is just 1 */
     removeButtonClickHandler(item) {
-        var found = this.state.cartItems.findIndex(cartItem => cartItem.id == item.id)
+        var found = this.state.cartItems.findIndex(cartItem => cartItem.id === item.id)
         const updatedItem = this.state.cartItems.slice()
-        if (item.quantity == 1) {
+        if (item.quantity === 1) {
             updatedItem.splice(found, 1)
             this.setState({snackBarOpen: true});
             this.setState({snackBarMessage: "Item removed from cart!"});
@@ -114,7 +114,7 @@ class Details extends Component {
         this.setState({cartItems: updatedItem})
         this.setState({cartCounter: this.state.cartCounter - 1});
         this.state.cartItems.forEach(cartItem => {
-            this.setState({totalCartValue: this.state.totalCartValue - cartItem.cartPrice})
+            this.setState({totalCartValue: this.state.totalCartValue - item.price})
         });
     }
 
@@ -155,7 +155,7 @@ class Details extends Component {
                 <div className="restaurant-info">
                     <div className="restaurant-image">
 
-                        <img height="200px" width="auto" src={restaurant.photoUrl}  />
+                        <img height="200px" width="auto" alt="restaurant featured" src={restaurant.photoUrl}  />
                     </div>
                     <div className="restaurant-details">
                         <p className="restaurant-title">{restaurant.restaurantName}</p>
@@ -184,30 +184,31 @@ class Details extends Component {
                     <div className="menu-container">
                         <div className="cat-container">
                             {categories.map((cat) => (
-                            <div>
-                                <p key={cat.id} className="cat-heading">{cat.categoryName}</p>
+                            <div key={cat.id}>
+                                <p className="cat-heading">{cat.categoryName}</p>
                                 <Divider className="divider"/>
-                                {}
                                 {cat.items.map((item) =>
                                     (
-                                        <table key={item.id} className="menu-items">
-                                        <tr>    
-                                        <td width="10%" className="veg-or-non-veg-icon">
-                                            <FontAwesomeIcon className={item.type} icon="circle" /> 
-                                        </td>
-                                        <td width="50%" className="menu-item-name">
-                                            {item.itemName}
-                                        </td>
-                                        <td width="30%">
-                                            <FontAwesomeIcon icon="rupee-sign"/> {(item.price).toFixed(2)}
-                                        </td>
-                                        <td>
-                                            <IconButton className={classes.button} onClick={() => this.addButtonClickHandler(item)} >
-                                                <Add className={classes.icon} />
-                                        </IconButton>
-                                        </td>
-                                    </tr>
-                                    </table>
+                                    <table key={item.id} className="menu-items">
+                                        <tbody>
+                                            <tr>    
+                                                <td width="10%" className="veg-or-non-veg-icon">
+                                                    <FontAwesomeIcon className={item.type} icon="circle" /> 
+                                                </td>
+                                                <td width="50%" className="menu-item-name">
+                                                    {item.itemName}
+                                                </td>
+                                                <td width="30%">
+                                                    <FontAwesomeIcon icon="rupee-sign"/> {(item.price).toFixed(2)}
+                                                </td>
+                                                <td>
+                                                    <IconButton className={classes.button} onClick={() => this.addButtonClickHandler(item)} >
+                                                        <Add className={classes.icon} />
+                                                </IconButton>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                </table>
                                     )
                                     )}
                                 </div>
@@ -226,37 +227,41 @@ class Details extends Component {
                             </div>
                             {cartItems.map((cartItem) => 
                                 <table className="cart-table" width="100%">
-                                        <tr height='10px'>
-                                            <td width="10%" className="veg-or-non-veg-icon">
-                                                <FontAwesomeIcon className={cartItem.type} icon={["far", "stop-circle"]} /> 
-                                            </td>
-                                            <td width="30%" className="menu-item-name">
-                                                {cartItem.itemName}
-                                            </td>
-                                            <td width="5%">
-                                                <IconButton onClick={() => this.removeButtonClickHandler(cartItem)}>
-                                                    <Remove/>
-                                                </IconButton>
-                                            </td>
-                                            <td width="5%" className="cart-item-qty">
-                                                {cartItem.quantity}
-                                            </td>
-                                            <td width="5%">
-                                                <IconButton onClick={() => this.addButtonClickHandler(cartItem)}>
-                                                    <Add/>
-                                                </IconButton>
-                                            </td>
-                                            <td width="40%" className="menu-item-amount">
-                                                <FontAwesomeIcon icon="rupee-sign"/> {(cartItem.cartPrice).toFixed(2)}
-                                            </td>
-                                        </tr>
+                                        <tbody>
+                                            <tr height='10px'>
+                                                <td width="10%" className="veg-or-non-veg-icon">
+                                                    <FontAwesomeIcon className={cartItem.type} icon={["far", "stop-circle"]} /> 
+                                                </td>
+                                                <td width="30%" className="menu-item-name">
+                                                    {cartItem.itemName}
+                                                </td>
+                                                <td width="5%">
+                                                    <IconButton onClick={() => this.removeButtonClickHandler(cartItem)}>
+                                                        <Remove/>
+                                                    </IconButton>
+                                                </td>
+                                                <td width="5%" className="cart-item-qty">
+                                                    {cartItem.quantity}
+                                                </td>
+                                                <td width="5%">
+                                                    <IconButton onClick={() => this.addButtonClickHandler(cartItem)}>
+                                                        <Add/>
+                                                    </IconButton>
+                                                </td>
+                                                <td width="40%" className="menu-item-amount">
+                                                    <FontAwesomeIcon icon="rupee-sign"/> {(cartItem.cartPrice).toFixed(2)}
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                     )}
-                                    <table class="cart-table" width="100%">
-                                        <tr>
-                                            <td className="bold" width="70%">TOTAL AMOUNT</td>
-                                            <td className="total-amount"><FontAwesomeIcon icon="rupee-sign"/> {(totalCartValue).toFixed(2)}</td>
-                                        </tr>
+                                    <table className="cart-table" width="100%">
+                                        <tbody>
+                                            <tr>
+                                                <td className="bold" width="70%">TOTAL AMOUNT</td>
+                                                <td className="total-amount"><FontAwesomeIcon icon="rupee-sign"/> {(totalCartValue).toFixed(2)}</td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 <div className="cart-button">
                                     <Button variant="contained" color="primary" className="checkout-button"
