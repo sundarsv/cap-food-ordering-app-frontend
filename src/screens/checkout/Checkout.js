@@ -282,9 +282,8 @@ class Checkout extends Component {
     };
 
     inputFlatChangeHandler = (e) => {
-        this.setState({
-            flatBuilNo: e.target.value,
-        });
+        this.setState({flat: e.target.value});
+        console.log(this.state.flat);
     }
 
     inputCityChangeHandler = (e) => {
@@ -293,6 +292,7 @@ class Checkout extends Component {
 
     inputLocalityChangeHandler = (e) => {
         this.setState({locality: e.target.value});
+        console.log(this.state.locality);
     }
 
     inputZipcodeChangeHandler = (e) => {
