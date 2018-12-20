@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import '../details/Details.css';
 import Header from '../../common/header/Header';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar, faCircle, faRupeeSign} from '@fortawesome/free-solid-svg-icons';
+import {faStopCircle} from '@fortawesome/free-regular-svg-icons';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faStar, faCircle, faRupeeSign, faStopCircle} from '@fortawesome/free-solid-svg-icons';
@@ -55,9 +59,8 @@ class Details extends Component {
     componentWillMount() {
         let xhr = new XMLHttpRequest();
         let that = this;
-        console.log("baseurl : " + this.props.baseUrl + "/restaurant/" + this.props.match.params.restaurantID);
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState == 4 && this.status === 200) {
+        xhr.addEventListener("readystatechange", function(){
+            if(this.readyState == 4 && this.status === 200) {
                 that.setState({
                     restaurant: JSON.parse(this.responseText),
                     address: JSON.parse(this.responseText).address,
@@ -94,9 +97,7 @@ class Details extends Component {
     }
 
     /* Function to calculate the Total Cart Amount*/
-    totalAmountCalc(itemValue) {
-        console.log(itemValue)
-        console.log(this.state.totalCartValue)
+    totalAmountCalc (itemValue) {
         this.setState({totalCartValue: this.state.totalCartValue + itemValue})
     }
 
@@ -157,7 +158,7 @@ class Details extends Component {
                 <Header {...this.props} isHomePage={false}/>
                 <div className="restaurant-info">
                     <div className="restaurant-image">
-                        <img height="200px" width="auto" src={restaurant.photoUrl}/>
+                        <img height="200px" width="auto" src={restaurant.photoUrl}  />
                     </div>
                     <div className="restaurant-details">
                         <p className="restaurant-title">{restaurant.restaurantName}</p>
@@ -186,32 +187,31 @@ class Details extends Component {
                     <div className="menu-container">
                         <div className="cat-container">
                             {categories.map((cat) => (
-                                <div>
-                                    <p key={cat.id} className="cat-heading">{cat.categoryName}</p>
-                                    <Divider className="divider"/>
-                                    {}
-                                    {cat.items.map((item) =>
-                                        (
-                                            <table key={item.id} className="menu-items">
-                                                <tr>
-                                                    <td width="10%" className="veg-or-non-veg-icon">
-                                                        <FontAwesomeIcon className={item.type} icon="circle"/>
-                                                    </td>
-                                                    <td width="50%" className="menu-item-name">
-                                                        {item.itemName}
-                                                    </td>
-                                                    <td width="30%">
-                                                        <FontAwesomeIcon icon="rupee-sign"/> {item.price}
-                                                    </td>
-                                                    <td>
-                                                        <IconButton className={classes.button}
-                                                                    onClick={() => this.addButtonClickHandler(item)}>
-                                                            <Add className={classes.icon}/>
-                                                        </IconButton>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        )
+                            <div>
+                                <p key={cat.id} className="cat-heading">{cat.categoryName}</p>
+                                <Divider className="divider"/>
+                                {}
+                                {cat.items.map((item) =>
+                                    (
+                                        <table key={item.id} className="menu-items">
+                                        <tr>    
+                                        <td width="10%" className="veg-or-non-veg-icon">
+                                            <FontAwesomeIcon className={item.type} icon="circle" /> 
+                                        </td>
+                                        <td width="50%" className="menu-item-name">
+                                            {item.itemName}
+                                        </td>
+                                        <td width="30%">
+                                            <FontAwesomeIcon icon="rupee-sign"/> {(item.price).toFixed(2)}
+                                        </td>
+                                        <td>
+                                            <IconButton className={classes.button} onClick={() => this.addButtonClickHandler(item)} >
+                                                <Add className={classes.icon} />
+                                        </IconButton>
+                                        </td>
+                                    </tr>
+                                    </table>
+                                    )
                                     )}
                                 </div>
                             ))}
@@ -226,12 +226,12 @@ class Details extends Component {
                                         <ShoppingCartIcon/>
                                     </Badge>
                                     <span className="cart-heading">My Cart</span>
-                                </div>
-                                {cartItems.map((cartItem) =>
-                                    <table className="cart-table" width="100%">
-                                        <tr>
+                            </div>
+                            {cartItems.map((cartItem) => 
+                                <table className="cart-table" width="100%">
+                                        <tr height='10px'>
                                             <td width="10%" className="veg-or-non-veg-icon">
-                                                <FontAwesomeIcon className={cartItem.type} icon="circle"/>
+                                                <FontAwesomeIcon className={cartItem.type} icon={["far", "stop-circle"]} />
                                             </td>
                                             <td width="30%" className="menu-item-name">
                                                 {cartItem.itemName}
@@ -241,7 +241,7 @@ class Details extends Component {
                                                     <Remove/>
                                                 </IconButton>
                                             </td>
-                                            <td width="5%">
+                                            <td width="5%" className="cart-item-qty">
                                                 {cartItem.quantity}
                                             </td>
                                             <td width="5%">
@@ -250,18 +250,17 @@ class Details extends Component {
                                                 </IconButton>
                                             </td>
                                             <td width="40%" className="menu-item-amount">
-                                                <FontAwesomeIcon icon="rupee-sign"/> {cartItem.cartPrice}
+                                                <FontAwesomeIcon icon="rupee-sign"/> {(cartItem.cartPrice).toFixed(2)}
                                             </td>
                                         </tr>
                                     </table>
-                                )}
-                                <table class="cart-table" width="100%">
-                                    <tr>
-                                        <td className="bold" width="70%">TOTAL AMOUNT</td>
-                                        <td className="total-amount"><FontAwesomeIcon
-                                            icon="rupee-sign"/> {totalCartValue}</td>
-                                    </tr>
-                                </table>
+                                    )}
+                                    <table class="cart-table" width="100%">
+                                        <tr>
+                                            <td className="bold" width="70%">TOTAL AMOUNT</td>
+                                            <td className="total-amount"><FontAwesomeIcon icon="rupee-sign"/> {(totalCartValue).toFixed(2)}</td>
+                                        </tr>
+                                    </table>
                                 <div className="cart-button">
                                     <Button variant="contained" color="primary" className="checkout-button"
                                             onClick={this.checkoutButtonClickHandler}>
