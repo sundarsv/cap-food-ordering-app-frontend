@@ -2,18 +2,22 @@
     width: 80%;
 
 }
+
 .category-menu {
-    color: #ffffff!important;
+    color: #ffffff !important;
     padding-left: 5%;
 }
+
 .account-circle {
     padding-right: 10%;
 }
+
 .app-header {
     background-color: #263238;
     color: #ffffff;
     padding: 8px 32px 8px 16px;
 }
+
 .searchIcon {
     height: 100%;
     position: absolute;
@@ -21,18 +25,17 @@
     display: flex;
     justify-content: center;
 }
+
 .inputInput {
     padding-left: 10%;
-   width: 80%;
-    color: whitesmoke!important;
+    width: 80%;
+    color: whitesmoke !important;
 
 }
 
 .inputInput:after {
     border-bottom: 2px solid rgb(255, 255, 255) !important;
 }
-
-
 
 .tabs {
     margin-bottom: 20px;
@@ -49,6 +52,7 @@
 .red {
     color: red;
 }
+
 .user-profile-drop-down {
     position: relative;
     right: 16px;
@@ -65,10 +69,15 @@
     cursor: pointer;
 }
 
-
 @media only screen and (min-width: 768px) {
-   .login-button {
-       float: right;
-   }
+    .login-button {
+        float: right;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .login-button {
+        float: left;
+    }
 }
 
