@@ -25,6 +25,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Snackbar from '@material-ui/core/Snackbar';
+import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
@@ -419,13 +420,15 @@ class Checkout extends Component {
                                         <StepContent>
                                             {index === 0 &&
                                             <div>
+                                            <AppBar position="static">
                                                 <Tabs className="addTabs" value={this.state.tabValue}
                                                       onChange={this.tabChangeHandler}>
                                                     <Tab label="EXISTING ADDRESS"/>
                                                     <Tab label="NEW ADDRESS"/>
                                                 </Tabs>
-
+                                            </AppBar>
                                                 {this.state.tabValue === 0 &&
+                                                <div className="existing-address-container">
                                                 (this.state.addresses.length !== 0 ?
                                                         <GridList cellHeight={"auto"} className={classes.gridListMain}
                                                                   cols={3}>
@@ -475,14 +478,12 @@ class Checkout extends Component {
                                                                 are no saved addresses! You can save an address using
                                                                 your ‘Profile’ menu option.</Typography>
                                                         </div>
-                                                )}
+                                                )</div>}
                                                 {this.state.tabValue === 1 &&
                                                 <div className="dispFlex">
-                                                    <FormControl required>
-                                                        <InputLabel htmlFor="flat">Flat/Building No.</InputLabel>
-                                                        <Input id="flat" type="text" flat={this.state.flat}
-                                                               defaultValue={this.state.flat}
-                                                               onChange={this.inputFlatChangeHandler}/>
+                                                    <FormControl required className={classes.formControl}>
+                                                        <InputLabel htmlFor="flat">Flat / Building No.</InputLabel>
+                                                        <Input id="flat" type="text" flat={this.state.flat} onChange={this.inputFlatChangeHandler} />
                                                         <FormHelperText className={this.state.flatRequired}>
                                                             <span className="red">required</span>
                                                         </FormHelperText>
