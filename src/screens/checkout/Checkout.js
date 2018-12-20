@@ -19,6 +19,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import Paper from '@material-ui/core/Paper';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -34,6 +35,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
 library.add(faCircle);
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -42,6 +44,7 @@ const styles = theme => ({
     gridListMain: {
         flexWrap: 'nowrap',
         transform: 'translateZ(0)',
+        width: '600px'
     },
     card: {
         maxWidth: 560,
@@ -57,6 +60,9 @@ const styles = theme => ({
     },
     actions: {
         display: 'flex',
+    },
+    resetContainer: {
+        padding: theme.spacing.unit * 3,
     },
     expand: {
         transform: 'rotate(0deg)',
@@ -76,9 +82,11 @@ const styles = theme => ({
     }
 });
 
+
 function getSteps() {
   return ['Delivery', 'Payment'];
 }
+
 
 function isNum(val) {
     return /^\d+$/.test(val);
@@ -88,6 +96,7 @@ class Checkout extends Component {
     
     constructor() {
         super();
+        
         this.state = {
             id : "",
             value:"",
@@ -129,9 +138,9 @@ class Checkout extends Component {
             this.props.history.push('/');
         }
         else {
-            let resourcePath = "/api/address/" + user;
-            let resourcePath1 = "/api/payment/";
-            let resourcePath2 = "/api/states/";
+            let resourcePath = "/address/user";
+            let resourcePath1 = "/payment/";
+            let resourcePath2 = "/states/";
             let data = null;
             let xhr = new XMLHttpRequest();
             let xhr1 = new XMLHttpRequest();
@@ -326,6 +335,7 @@ class Checkout extends Component {
         const { classes } = this.props;
         const steps = getSteps();
         const { activeStep } = this.state;
+        const {cartItems, totalCartValue} = this.props.location;
         return (
             <div className="checkout">
                 <Header showSearch="false"/>
@@ -479,10 +489,12 @@ class Checkout extends Component {
         </Stepper>
         
         <div className={this.state.orderPlaced}>
-        <Typography gutterBottom variant="h5" component="h2">
-            View the summary and place your order now!
-        </Typography>
-        <Button className={classes.button} onClick={this.changeHandler}>Change</Button>
+        {activeStep === steps.length && (
+                <Paper square elevation={0} className={classes.resetContainer}>
+                        <Typography>View the summary and place your order now!</Typography>
+                        <Button onClick={this.handleReset} className={classes.button}>CHANGE</Button>
+                </Paper>
+            )}
         </div>
         </div>
 
@@ -492,7 +504,7 @@ class Checkout extends Component {
                                     <Typography style={{marginLeft:'40px',fontWeight:'bold',marginBottom:'30px'}} gutterBottom variant="h5" component="h2">
                                         Summary
                                     </Typography>
-                                    {this.props.location.state.cartItems.map(item => (
+                                    {cartItems.map(item => (
                                         <div className="order-body-container" key={"item" + item.id}>
                                             <div className="div-container div-items">{item.type === 'Veg' &&
                                                 <FontAwesomeIcon icon="circle" className="veg-item-color"/>}
@@ -506,7 +518,7 @@ class Checkout extends Component {
                                     <Divider/>
                                     <div className="body-container">
                                     <span style={{fontWeight:'bold'}} className="div-container div-items">Net Amount </span>
-                                    <span className="rupee-container"><FontAwesomeIcon icon="rupee-sign" /> {this.props.location.state.totalCartItemsValue}</span>
+                                    <span className="rupee-container"><FontAwesomeIcon icon="rupee-sign" /> {totalCartValue}</span>
                                     </div>
                                     <br />
                                     <Button className="button-container" style={{marginLeft:'55px'}} variant="contained" onClick={this.confirmOrderHandler} color="primary">
