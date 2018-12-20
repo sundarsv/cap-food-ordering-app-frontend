@@ -547,9 +547,11 @@ class Checkout extends Component {
                                                 )</div>}
                                                 {this.state.tabValue === 1 &&
                                                 <div className="dispFlex">
-                                                    <FormControl required className={classes.formControl}>
+                                                    <FormControl required>
                                                         <InputLabel htmlFor="flat">Flat / Building No.</InputLabel>
-                                                        <Input id="flat" type="text" flat={this.state.flat} onChange={this.inputFlatChangeHandler} />
+                                                        <Input id="flat" type="text" flat={this.state.flat} 
+                                                            defaultValue={this.state.flat}
+                                                            onChange={this.inputFlatChangeHandler} />
                                                         <FormHelperText className={this.state.flatRequired}>
                                                             <span className="red">required</span>
                                                         </FormHelperText>
