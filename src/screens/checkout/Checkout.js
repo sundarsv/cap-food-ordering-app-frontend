@@ -157,7 +157,6 @@ class Checkout extends Component {
             let xhr1 = new XMLHttpRequest();
             let xhr2 = new XMLHttpRequest();
             let that = this;
-
             xhr.addEventListener("readystatechange", function () {
                 if (this.readyState === 4 && this.status === 200) {
                     that.setState({
@@ -194,11 +193,16 @@ class Checkout extends Component {
             xhr2.send(data);
         }
 
-    };
+    }
 
     tabChangeHandler = (event, tabValue) => {
         this.setState({tabValue});
-    };
+    }
+
+    locationChangeHandler = event => {
+        this.setState({stateId: event.target.value, location: event.target.text});
+    }
+
 
     handleNext = () => {
         if (this.state.tabValue === 1) {
@@ -228,7 +232,7 @@ class Checkout extends Component {
                 }
             }
             if (this.state.incorrectDetails === "false") {
-                let savedAddress = {
+                let  savedAddress = {
                     "id": "",
                     "flatBuilNo": this.state.flatBuilNo,
                     "locality": this.state.locality,
@@ -238,7 +242,7 @@ class Checkout extends Component {
                         "id": this.state.stateId,
                         "stateName": this.state.location
                     }
-                };
+                }
                 this.setState({
                     selectedAddress: savedAddress,
                 });
@@ -280,24 +284,27 @@ class Checkout extends Component {
         this.setState({
             flatBuilNo: e.target.value,
         });
-    };
+    }
 
     inputCityChangeHandler = (e) => {
         this.setState({city: e.target.value});
-    };
+    }
 
     inputLocalityChangeHandler = (e) => {
         this.setState({locality: e.target.value});
-    };
+    }
 
     inputZipcodeChangeHandler = (e) => {
         this.setState({zipcode: e.target.value});
-    };
+    }
 
     inputStateChangeHandler = (e) => {
         this.setState({stateId: e.target.value});
-    };
+    }
 
+    changeHandler = () => {
+        ReactDOM.render(<Checkout/>, document.getElementById('root'));
+    }
 
     iconClickHandler = (address, index) => {
         this.state.addresses.map(obj => (
@@ -311,15 +318,15 @@ class Checkout extends Component {
                 :
                 console.log("dint match " + obj.id)
         ));
-    };
+    }
 
     snackBarCloseHandler = () => {
         this.setState({
             open: false
         });
-    };
+    }
 
-    confirmOrderHandler = () => {
+    confirmOrderHandler = (name, value) => {
         let resourcePath3 = "/order";
         let xhr = new XMLHttpRequest();
         let that = this;
@@ -334,7 +341,7 @@ class Checkout extends Component {
             });
             return;
         } else {
-            this.props.location.cartItems.forEach(item => {
+            this.props.location.cartItems.map(item => {
                 this.state.cartItems.push({
                     "itemId": item.id,
                     "quantity": item.quantity
@@ -366,9 +373,6 @@ class Checkout extends Component {
 
         }
 
-        console.log("order placed params : " + parameters);
-        console.log("order placed body : " + itemQuantities);
-
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4 && this.status === 200) {
                 that.setState({
@@ -385,11 +389,11 @@ class Checkout extends Component {
         });
 
         xhr.open("POST", this.props.baseUrl + resourcePath3 + "?" + parameters);
-        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Content-Type", "application/json")
         xhr.setRequestHeader("accessToken", sessionStorage.getItem("access-token"));
         xhr.send(itemQuantities);
 
-    };
+    }
 
     render() {
         const {classes} = this.props;
@@ -547,7 +551,7 @@ class Checkout extends Component {
                                                             {this.state.paymentModes.map((payment) => {
                                                                 return (
                                                                     <FormControlLabel key={payment.id}
-                                                                                      value={"" + payment.id}
+                                                                                      value={""+ payment.id}
                                                                                       defaultValue={payment.paymentName}
                                                                                       control={<Radio/>}
                                                                                       label={payment.paymentName}/>
@@ -595,37 +599,34 @@ class Checkout extends Component {
                     <div className="orderSummary">
                         <Card style={{height: '100%'}}>
                             <CardContent>
-                                <Typography style={{fontWeight: 'bold', marginBottom: '30px'}}
+                                <Typography style={{marginLeft: '40px', fontWeight: 'bold', marginBottom: '30px'}}
                                             gutterBottom variant="h5" component="h2">
                                     Summary
                                 </Typography>
                                 {cartItems !== undefined && cartItems.map(item => (
                                     <div className="order-body-container" key={"item" + item.id}>
-                                        <div className="div-items">{item.type === 'Veg' &&
+                                        <div className="div-container div-items">{item.type === 'Veg' &&
                                         <FontAwesomeIcon icon="circle" className="veg-item-color"/>}
                                             {item.type === 'Non-Veg' &&
                                             <FontAwesomeIcon icon="circle" className="non-veg-color"/>} {item.itemName}
                                         </div>
-                                        <div className="div-quantity"> {item.quantity}</div>
-                                        <div className="div-container"><FontAwesomeIcon icon="rupee-sign"/>
-                                            {item.price.toFixed(2)}
+                                        <div className="div-container div-quantity"> {item.quantity}</div>
+                                        <div className="div-container div-value"><FontAwesomeIcon icon="rupee-sign"/> {item.price}
                                         </div>
                                     </div>
                                 ))}
                                 <Divider/>
-                                <div className="body-container" style={{ paddingTop: '3%'}}>
+                                <div className="body-container">
                                     <span style={{fontWeight: 'bold'}}
-                                          className=" div-items">Net Amount </span>
-                                    <span className="rupee-container"><FontAwesomeIcon
-                                        icon="rupee-sign"/> {totalCartValue === undefined? totalCartValue : totalCartValue.toFixed(2)}</span>
+                                          className="div-container div-items">Net Amount </span>
+                                    <span className="rupee-container div-value"><FontAwesomeIcon
+                                        icon="rupee-sign"/> {totalCartValue}</span>
                                 </div>
                                 <br/>
-                                <div className="body-container">
-                                    <Button className="button-container" variant="contained"
-                                            onClick={this.confirmOrderHandler} color="primary">
-                                        Place Order
-                                    </Button>
-                                </div>
+                                <Button className="button-container" variant="contained"
+                                        onClick={this.confirmOrderHandler} color="primary">
+                                    Place Order
+                                </Button>
                                 <Snackbar
                                     anchorOrigin={{
                                         vertical: 'bottom',
