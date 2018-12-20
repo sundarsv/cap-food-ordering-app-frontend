@@ -61,8 +61,16 @@ const styles = theme => ({
     actions: {
         display: 'flex',
     },
+    snackbar: {
+        margin: theme.spacing.unit,
+    },
     resetContainer: {
         padding: theme.spacing.unit * 3,
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 240,
+        maxWidth: 240
     },
     expand: {
         transform: 'rotate(0deg)',
