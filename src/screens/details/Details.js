@@ -226,7 +226,7 @@ class Details extends Component {
                                     <span className="cart-heading">My Cart</span>
                             </div>
                             {cartItems.map((cartItem) => 
-                                <table className="cart-table" width="100%">
+                                <table key={cartItem.id} className="cart-table" width="100%">
                                         <tbody>
                                             <tr height='10px'>
                                                 <td width="10%" className="veg-or-non-veg-icon">
