@@ -19,6 +19,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -136,8 +137,50 @@ class Checkout extends Component {
             categories: [],
             totalCartItemsValue: "",
             orderNotificationMessage: "",
-            states: [],
-            stateId: '',
+            states: [
+                {
+                    "id": 1,
+                    "stateName": "Andaman and Nicobar Islands"
+                },
+                {
+                    "id": 2,
+                    "stateName": "Andhra Pradesh"
+                },
+                {
+                    "id": 3,
+                    "stateName": "Arunachal Pradesh"
+                },
+                {
+                    "id": 4,
+                    "stateName": "Assam"
+                },
+                {
+                    "id": 5,
+                    "stateName": "Bihar"
+                },
+                {
+                    "id": 6,
+                    "stateName": "Chhattisgarh"
+                },
+                {
+                    "id": 7,
+                    "stateName": "Delhi"
+                },
+                {
+                    "id": 8,
+                    "stateName": "Goa"
+                },
+                {
+                    "id": 9,
+                    "stateName": "	Gujarat"
+                },
+                {
+                    "id": 10,
+                    "stateName": "Haryana"
+                },
+                
+            ],
+            //stateId: '',
             selectedAddress: [],
             cartItems: [],
             paymentModes: [],
@@ -512,12 +555,12 @@ class Checkout extends Component {
                                                     <FormControl required>
                                                         <InputLabel htmlFor="location">State</InputLabel>
                                                         <Select
-                                                            value={this.state.stateId}
-                                                            onChange={this.inputStateChangeHandler}
-                                                        >
+                                                            input={<Input id="select-multiple-checkbox-genre" />}
+                                                            value={this.state.id}
+                                                            onChange={this.inputStateChangeHandler}>
                                                             {this.state.states.map(loc => (
                                                                 <MenuItem key={"loc" + loc.id} value={loc.id}>
-                                                                    {loc.stateName}
+                                                                    <ListItemText primary={loc.stateName} />
                                                                 </MenuItem>
                                                             ))}
                                                         </Select>
