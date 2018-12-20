@@ -3,8 +3,8 @@ import '../details/Details.css';
 import Header from '../../common/header/Header';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faCircle, faRupeeSign, faStopCircle} from '@fortawesome/free-solid-svg-icons';
-// import {faStopCircle} from '@fortawesome/free-regular-svg-icons';
+import { faStar, faCircle, faRupeeSign} from '@fortawesome/free-solid-svg-icons';
+import {faStopCircle} from '@fortawesome/free-regular-svg-icons';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
@@ -57,7 +57,6 @@ class Details extends Component {
     componentWillMount() {
         let xhr = new XMLHttpRequest();
         let that = this;
-        console.log("baseurl : " + this.props.baseUrl + "/restaurant/" + this.props.match.params.restaurantID);
         xhr.addEventListener("readystatechange", function(){
             if(this.readyState == 4 && this.status === 200) {
                 that.setState({
@@ -97,8 +96,6 @@ class Details extends Component {
 
     /* Function to calculate the Total Cart Amount*/
     totalAmountCalc (itemValue) {
-        console.log(itemValue)
-        console.log(this.state.totalCartValue)
         this.setState({totalCartValue: this.state.totalCartValue + itemValue})
     }
 
@@ -161,7 +158,7 @@ class Details extends Component {
                 <Header {...this.props}/>
                 <div className="restaurant-info">
                     <div className="restaurant-image">
-                        <img height="200px" width="auto" src={restaurant.photoUrl} />
+                        <img height="200px" width="auto" src={restaurant.photoUrl}  />
                     </div>
                     <div className="restaurant-details">
                         <p className="restaurant-title">{restaurant.restaurantName}</p>
@@ -204,7 +201,7 @@ class Details extends Component {
                                             {item.itemName}
                                         </td>
                                         <td width="30%">
-                                            <FontAwesomeIcon icon="rupee-sign"/> {item.price}
+                                            <FontAwesomeIcon icon="rupee-sign"/> {(item.price).toFixed(2)}
                                         </td>
                                         <td>
                                             <IconButton className={classes.button} onClick={() => this.addButtonClickHandler(item)} >
@@ -230,9 +227,9 @@ class Details extends Component {
                             </div>
                             {cartItems.map((cartItem) => 
                                 <table className="cart-table" width="100%">
-                                        <tr>
+                                        <tr height='10px'>
                                             <td width="10%" className="veg-or-non-veg-icon">
-                                                <FontAwesomeIcon className={cartItem.type} icon="circle" /> 
+                                                <FontAwesomeIcon className={cartItem.type} icon={["far", "stop-circle"]} /> 
                                             </td>
                                             <td width="30%" className="menu-item-name">
                                                 {cartItem.itemName}
@@ -242,7 +239,7 @@ class Details extends Component {
                                                     <Remove />
                                                 </IconButton>
                                             </td>
-                                            <td width="5%">
+                                            <td width="5%" className="cart-item-qty">
                                                 {cartItem.quantity}
                                             </td>
                                             <td width="5%">
@@ -251,7 +248,7 @@ class Details extends Component {
                                                 </IconButton>
                                             </td>
                                             <td width="40%" className="menu-item-amount">
-                                                <FontAwesomeIcon icon="rupee-sign"/> {cartItem.cartPrice}
+                                                <FontAwesomeIcon icon="rupee-sign"/> {(cartItem.cartPrice).toFixed(2)}
                                             </td>
                                         </tr>
                                     </table>
@@ -259,7 +256,7 @@ class Details extends Component {
                                     <table class="cart-table" width="100%">
                                         <tr>
                                             <td className="bold" width="70%">TOTAL AMOUNT</td>
-                                            <td className="total-amount"><FontAwesomeIcon icon="rupee-sign"/> {totalCartValue}</td>
+                                            <td className="total-amount"><FontAwesomeIcon icon="rupee-sign"/> {(totalCartValue).toFixed(2)}</td>
                                         </tr>
                                     </table>
                                 <div className="cart-button">
