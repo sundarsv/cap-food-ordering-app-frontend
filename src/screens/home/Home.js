@@ -38,7 +38,7 @@ class Home extends Component {
     searchChangeHandler = (e) => {
         let restaurantName = e.target.value;
         this.searchRestaurantByName(restaurantName);
-    }
+    };
 
     /**
      * this method finds all restaurant by its name
@@ -100,7 +100,7 @@ class Home extends Component {
         this.props.history.push({
             pathname: "/restaurant/" + restaurantID
         });
-    }
+    };
 
     render() {
         const classes = this.props.classes;

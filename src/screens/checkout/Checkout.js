@@ -197,11 +197,8 @@ class Checkout extends Component {
 
     tabChangeHandler = (event, tabValue) => {
         this.setState({tabValue});
-    }
+    };
 
-    locationChangeHandler = event => {
-        this.setState({stateId: event.target.value, location: event.target.text});
-    }
 
 
     handleNext = () => {
@@ -242,7 +239,7 @@ class Checkout extends Component {
                         "id": this.state.stateId,
                         "stateName": this.state.location
                     }
-                }
+                };
                 this.setState({
                     selectedAddress: savedAddress,
                 });
@@ -284,27 +281,24 @@ class Checkout extends Component {
         this.setState({
             flatBuilNo: e.target.value,
         });
-    }
+    };
 
     inputCityChangeHandler = (e) => {
         this.setState({city: e.target.value});
-    }
+    };
 
     inputLocalityChangeHandler = (e) => {
         this.setState({locality: e.target.value});
-    }
+    };
 
     inputZipcodeChangeHandler = (e) => {
         this.setState({zipcode: e.target.value});
-    }
+    };
 
     inputStateChangeHandler = (e) => {
         this.setState({stateId: e.target.value});
-    }
+    };
 
-    changeHandler = () => {
-        ReactDOM.render(<Checkout/>, document.getElementById('root'));
-    }
 
     iconClickHandler = (address, index) => {
         this.state.addresses.map(obj => (
@@ -318,15 +312,15 @@ class Checkout extends Component {
                 :
                 console.log("dint match " + obj.id)
         ));
-    }
+    };
 
     snackBarCloseHandler = () => {
         this.setState({
             open: false
         });
-    }
+    };
 
-    confirmOrderHandler = (name, value) => {
+    confirmOrderHandler = () => {
         let resourcePath3 = "/order";
         let xhr = new XMLHttpRequest();
         let that = this;
@@ -341,7 +335,7 @@ class Checkout extends Component {
             });
             return;
         } else {
-            this.props.location.cartItems.map(item => {
+            this.props.location.cartItems.forEach(item => {
                 this.state.cartItems.push({
                     "itemId": item.id,
                     "quantity": item.quantity
@@ -389,11 +383,11 @@ class Checkout extends Component {
         });
 
         xhr.open("POST", this.props.baseUrl + resourcePath3 + "?" + parameters);
-        xhr.setRequestHeader("Content-Type", "application/json")
+        xhr.setRequestHeader("Content-Type", "application/json");
         xhr.setRequestHeader("accessToken", sessionStorage.getItem("access-token"));
         xhr.send(itemQuantities);
 
-    }
+    };
 
     render() {
         const {classes} = this.props;
@@ -611,7 +605,8 @@ class Checkout extends Component {
                                             <FontAwesomeIcon icon="circle" className="non-veg-color"/>} {item.itemName}
                                         </div>
                                         <div className="div-container div-quantity"> {item.quantity}</div>
-                                        <div className="div-container div-value"><FontAwesomeIcon icon="rupee-sign"/> {item.price}
+                                        <div className="div-container div-value"><FontAwesomeIcon icon="rupee-sign"/>
+                                            {item.price.toFixed(2)}
                                         </div>
                                     </div>
                                 ))}
@@ -620,7 +615,7 @@ class Checkout extends Component {
                                     <span style={{fontWeight: 'bold'}}
                                           className="div-container div-items">Net Amount </span>
                                     <span className="rupee-container div-value"><FontAwesomeIcon
-                                        icon="rupee-sign"/> {totalCartValue}</span>
+                                        icon="rupee-sign"/> {totalCartValue === undefined?totalCartValue: totalCartValue.toFixed(2)}</span>
                                 </div>
                                 <br/>
                                 <Button className="button-container" variant="contained"
