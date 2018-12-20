@@ -69,10 +69,8 @@
 }
 
 .orderSummary {
-    float: right;
-    width: 500px;
-    margin-left: 80px;
-    margin-top: 30px;
+    margin: 30px 60px auto auto;
+    width: 400px;
 }
 
 .selectionGrid {
