@@ -132,7 +132,7 @@ class Checkout extends Component {
             addresses: []
         }
     }
-    
+
     componentWillMount() {
 
         if (sessionStorage.getItem("access-token") == null) {
@@ -223,7 +223,7 @@ class Checkout extends Component {
                 }
             }
             if (this.state.incorrectDetails === "false") {
-                var savedAddress = {
+                let  savedAddress = {
                     "id": "",
                     "flatBuilNo": this.state.flatBuilNo,
                     "locality": this.state.locality,
@@ -274,7 +274,7 @@ class Checkout extends Component {
 
     inputFlatChangeHandler = (e) => {
         this.setState({
-            flat: e.target.value,
+            flatBuilNo: e.target.value,
         });
     }
 
@@ -291,7 +291,7 @@ class Checkout extends Component {
     }
 
     inputStateChangeHandler = (e) => {
-        this.setState({statename: e.target.value});
+        this.setState({stateId: e.target.value});
     }
 
     changeHandler = () => {
@@ -325,36 +325,43 @@ class Checkout extends Component {
         let address = this.state.selectedAddress;
         let parameters;
         let itemQuantities;
-        console.log("this.state.paymentId: " + this.state.paymentId);
-        console.log("itemQuantities" + this.props.location.cartItems);
+
         if (this.props.location.cartItems === undefined) {
+            that.setState({
+                open: true,
+                orderNotificationMessage: "Unable to place your order! Please try again!"
+            });
             return;
-        }else{
+        } else {
             this.props.location.cartItems.map(item => {
                 this.state.cartItems.push({
-                    "itemId" : item.id,
+                    "itemId": item.id,
                     "quantity": item.quantity
                 });
             });
 
-            itemQuantities = JSON.stringify(this.state.cartItems );
+            itemQuantities = JSON.stringify(this.state.cartItems);
         }
-        if (address === "") {
+        if (address.length === 0) {
+            that.setState({
+                open: true,
+                orderNotificationMessage: "Unable to place your order! Please try again!"
+            });
             return;
         }
-        if (address.id !== undefined) {
+        if (address.id !== "") {
             parameters = "addressId=" + address.id +
-                "&paymentId=" + Number(this.state.paymentId )+
-                "&bill=" +  this.props.location.totalCartValue ;
+                "&paymentId=" + Number(this.state.paymentId) +
+                "&bill=" + this.props.location.totalCartValue;
 
         } else {
             parameters = "flatBuilNo=" + address.flatBuilNo +
                 "&locality=" + address.locality +
-                "&city=" + address.city+
+                "&city=" + address.city +
                 "&zipcode=" + address.zipcode +
                 "&stateId=" + address.state.id +
-                "&paymentId=" + Number(this.state.paymentId )+
-                "&bill=" +  this.props.location.totalCartValue ;
+                "&paymentId=" + Number(this.state.paymentId) +
+                "&bill=" + this.props.location.totalCartValue;
 
         }
 
@@ -365,7 +372,7 @@ class Checkout extends Component {
             if (this.readyState === 4 && this.status === 200) {
                 that.setState({
                     open: true,
-                    orderNotificationMessage: "Your order placed successfully! Your order ID is " +this.responseText
+                    orderNotificationMessage: "Your order placed successfully! Your order ID is " + this.responseText
                 });
             }
             else {
@@ -376,7 +383,7 @@ class Checkout extends Component {
             }
         });
 
-        xhr.open("POST", this.props.baseUrl + resourcePath3+ "?" +parameters);
+        xhr.open("POST", this.props.baseUrl + resourcePath3 + "?" + parameters);
         xhr.setRequestHeader("Content-Type", "application/json")
         xhr.setRequestHeader("accessToken", sessionStorage.getItem("access-token"));
         xhr.send(itemQuantities);
@@ -390,7 +397,7 @@ class Checkout extends Component {
         const {cartItems, totalCartValue} = this.props.location;
         return (
             <div className="checkout">
-                <Header showSearch="false"/>
+                <Header {...this.props} isHomePage={false}/>
                 <div className="main-body-container">
                     <div>
                         <Stepper activeStep={activeStep} orientation="vertical">
@@ -407,149 +414,182 @@ class Checkout extends Component {
                                                     <Tab label="NEW ADDRESS"/>
                                                 </Tabs>
 
-                                {this.state.tabValue === 0 && 
-                                (this.state.addresses.length !==0 ?
-                                <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
-                                    {this.state.addresses.map((address, i) => (
-                                    <GridListTile key={i} style={{padding:'20px'}}>
-                                    <div id ={i} key={i} className={this.state.selectedIndex === i ? 'selectionGrid' : 'grid'} 
-                                    style={{ padding:'10px' }}>
-                                        <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'5px'}}>{address.flatBuilNo}</Typography>
-                                        <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.locality}</Typography>
-                                        <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.city}</Typography>
-                                        <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.state.stateName}</Typography>
-                                        <Typography style={{ fontSize:'20px',marginRight:'20px',marginBottom:'10px'}}>{address.zipcode}</Typography>
-                                        <IconButton id={i} key={i} 
-                                        style={{marginLeft:'60%'}} 
-                                        onClick={() => this.iconClickHandler(address,i)}>
-                                            <CheckCircle className={this.state.selectedIndex === i ? 'green' : 'grid'} />
-                                        </IconButton>
-                                    </div>
-                                    </GridListTile>
-                                    ))}
-                                    </GridList>
-                                    :
-                                    <div style={{marginBottom:'100px'}}>
-                                        <Typography style={{color:'grey',fontSize:'18px'}}>There are no saved addresses! You can save an address using your ‘Profile’ menu option.</Typography>
-                                    </div>
-                                )}
-                                {this.state.tabValue === 1 && 
-                                <div className="dispFlex">
-                                <FormControl required>
-                                    <InputLabel htmlFor="flat">Flat/Building No.</InputLabel>
-                                    <Input id="flat" type="text" flat={this.state.flat} defaultValue={this.state.flat}
-                                        onChange={this.inputFlatChangeHandler} />
-                                    <FormHelperText className={this.state.flatRequired}>
-                                        <span className="red">required</span>
-                                    </FormHelperText>
-                                </FormControl>
-                                <br /><br />
-                                <FormControl required>
-                                    <InputLabel htmlFor="locality">Locality</InputLabel>
-                                    <Input id="locality" locality={this.state.locality} defaultValue={this.state.locality}
-                                        onChange={this.inputLocalityChangeHandler} />
-                                    <FormHelperText className={this.state.localityRequired}>
-                                        <span className="red">required</span>
-                                    </FormHelperText>
-                                </FormControl>
-                                <br /><br />
-                                <FormControl required>
-                                    <InputLabel htmlFor="city">City</InputLabel>
-                                    <Input id="city" city={this.state.city} defaultValue={this.state.city}
-                                        onChange={this.inputCityChangeHandler} />
-                                    <FormHelperText className={this.state.cityRequired}>
-                                        <span className="red">required</span>
-                                    </FormHelperText>
-                                </FormControl>
-                                <br /><br />
-                                <FormControl required>
-                                <InputLabel htmlFor="location">State</InputLabel>
-                                <Select
-                                    value={this.state.location}
-                                    onChange={this.locationChangeHandler}
-                                >
-                                    {this.state.states.map(loc => (
-                                        <MenuItem key={"loc" + loc.id} value={loc.stateName}>
-                                            {loc.stateName}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                    <FormHelperText className={this.state.stateRequired}>
-                                        <span className="red">required</span>
-                                    </FormHelperText>
-                                </FormControl>
-                                <br /><br />
-                                <FormControl required>
-                                    <InputLabel htmlFor="zipcode">Zipcode</InputLabel>
-                                    <Input id="zipcode" zipcode={this.state.zipcode} defaultValue={this.state.zipcode}
-                                        onChange={this.inputZipcodeChangeHandler} />
-                                    <FormHelperText className={this.state.zipcodeRequired}>
-                                        <span className="red">required</span>
-                                    </FormHelperText>
-                            <FormHelperText className={this.state.incorrectZipcode}>
-                                <span className="red">Zipcode must contain only numbers and must be 6 digits long</span>
-                            </FormHelperText>
-                                </FormControl>
-                                <br /><br />
-                                </div>
-                                }
-                                </div>
-                                }
-                                {
-                                    index === 1  && 
-                                    <div>
-                                    <FormControl component="fieldset" className={classes.formControl}>
-                                    <FormLabel component="legend">Select Mode of Payment</FormLabel>
-                                    <RadioGroup
-                                        aria-label="Gender"
-                                        name="gender1"
-                                        className={classes.group}
-                                        value={this.state.value}
-                                        onChange={this.handleChange}
-                                    >
-                                    {this.state.paymentModes.map((payment) => {
-                                        return (
-                                        <FormControlLabel key={payment.id} value={payment.paymentName} defaultValue={payment.paymentName} control={<Radio />} label={payment.paymentName} />
-                                        )
-                                    })}
-                                    </RadioGroup>
-                                    </FormControl>
-                                    </div>
-                                }
-        <div className={classes.actionsContainer}>
-                                    <div>
-                                    <Button
-                                        disabled={activeStep === 0}
-                                        onClick={this.handleBack}
-                                        className={classes.button}
-                                    >
-                                        Back
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={this.handleNext}
-                                        className={classes.button}
-                                    >
-                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                    </Button>
-                                    </div>
-                                </div>
-                                </StepContent>
-                            </Step>
-                            );
-                        })}
-        </Stepper>
-        
-        <div className={this.state.orderPlaced}>
-        {activeStep === steps.length && (
-                <Paper square elevation={0} className={classes.resetContainer}>
-                        <Typography>View the summary and place your order now!</Typography>
-                        <Button onClick={this.handleReset} className={classes.button}>CHANGE</Button>
-                </Paper>
-            )}
-        </div>
-        </div>
+                                                {this.state.tabValue === 0 &&
+                                                (this.state.addresses.length !== 0 ?
+                                                        <GridList cellHeight={"auto"} className={classes.gridListMain}
+                                                                  cols={3}>
+                                                            {this.state.addresses.map((address, i) => (
+                                                                <GridListTile key={i} style={{padding: '20px'}}>
+                                                                    <div id={i} key={i}
+                                                                         className={this.state.selectedIndex === i ? 'selectionGrid' : 'grid'}
+                                                                         style={{padding: '10px'}}>
+                                                                        <Typography style={{
+                                                                            fontSize: '20px',
+                                                                            marginRight: '20px',
+                                                                            marginBottom: '5px'
+                                                                        }}>{address.flatBuilNo}</Typography>
+                                                                        <Typography style={{
+                                                                            fontSize: '20px',
+                                                                            marginRight: '20px',
+                                                                            marginBottom: '10px'
+                                                                        }}>{address.locality}</Typography>
+                                                                        <Typography style={{
+                                                                            fontSize: '20px',
+                                                                            marginRight: '20px',
+                                                                            marginBottom: '10px'
+                                                                        }}>{address.city}</Typography>
+                                                                        <Typography style={{
+                                                                            fontSize: '20px',
+                                                                            marginRight: '20px',
+                                                                            marginBottom: '10px'
+                                                                        }}>{address.state.stateName}</Typography>
+                                                                        <Typography style={{
+                                                                            fontSize: '20px',
+                                                                            marginRight: '20px',
+                                                                            marginBottom: '10px'
+                                                                        }}>{address.zipcode}</Typography>
+                                                                        <IconButton id={i} key={i}
+                                                                                    style={{marginLeft: '60%'}}
+                                                                                    onClick={() => this.iconClickHandler(address, i)}>
+                                                                            <CheckCircle
+                                                                                className={this.state.selectedIndex === i ? 'green' : 'grid'}/>
+                                                                        </IconButton>
+                                                                    </div>
+                                                                </GridListTile>
+                                                            ))}
+                                                        </GridList>
+                                                        :
+                                                        <div style={{marginBottom: '100px'}}>
+                                                            <Typography style={{color: 'grey', fontSize: '18px'}}>There
+                                                                are no saved addresses! You can save an address using
+                                                                your ‘Profile’ menu option.</Typography>
+                                                        </div>
+                                                )}
+                                                {this.state.tabValue === 1 &&
+                                                <div className="dispFlex">
+                                                    <FormControl required>
+                                                        <InputLabel htmlFor="flat">Flat/Building No.</InputLabel>
+                                                        <Input id="flat" type="text" flat={this.state.flat}
+                                                               defaultValue={this.state.flat}
+                                                               onChange={this.inputFlatChangeHandler}/>
+                                                        <FormHelperText className={this.state.flatRequired}>
+                                                            <span className="red">required</span>
+                                                        </FormHelperText>
+                                                    </FormControl>
+                                                    <br/><br/>
+                                                    <FormControl required>
+                                                        <InputLabel htmlFor="locality">Locality</InputLabel>
+                                                        <Input id="locality" locality={this.state.locality}
+                                                               defaultValue={this.state.locality}
+                                                               onChange={this.inputLocalityChangeHandler}/>
+                                                        <FormHelperText className={this.state.localityRequired}>
+                                                            <span className="red">required</span>
+                                                        </FormHelperText>
+                                                    </FormControl>
+                                                    <br/><br/>
+                                                    <FormControl required>
+                                                        <InputLabel htmlFor="city">City</InputLabel>
+                                                        <Input id="city" city={this.state.city}
+                                                               defaultValue={this.state.city}
+                                                               onChange={this.inputCityChangeHandler}/>
+                                                        <FormHelperText className={this.state.cityRequired}>
+                                                            <span className="red">required</span>
+                                                        </FormHelperText>
+                                                    </FormControl>
+                                                    <br/><br/>
+                                                    <FormControl required>
+                                                        <InputLabel htmlFor="location">State</InputLabel>
+                                                        <Select
+                                                            value={this.state.stateId}
+                                                            onChange={this.inputStateChangeHandler}
+                                                        >
+                                                            {this.state.states.map(loc => (
+                                                                <MenuItem key={"loc" + loc.id} value={loc.id}>
+                                                                    {loc.stateName}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                        <FormHelperText className={this.state.stateRequired}>
+                                                            <span className="red">required</span>
+                                                        </FormHelperText>
+                                                    </FormControl>
+                                                    <br/><br/>
+                                                    <FormControl required>
+                                                        <InputLabel htmlFor="zipcode">Zipcode</InputLabel>
+                                                        <Input id="zipcode" zipcode={this.state.zipcode}
+                                                               defaultValue={this.state.zipcode}
+                                                               onChange={this.inputZipcodeChangeHandler}/>
+                                                        <FormHelperText className={this.state.zipcodeRequired}>
+                                                            <span className="red">required</span>
+                                                        </FormHelperText>
+                                                        <FormHelperText className={this.state.incorrectZipcode}>
+                                                            <span className="red">Zipcode must contain only numbers and must be 6 digits long</span>
+                                                        </FormHelperText>
+                                                    </FormControl>
+                                                    <br/><br/>
+                                                </div>
+                                                }
+                                            </div>
+                                            }
+                                            {
+                                                index === 1 &&
+                                                <div>
+                                                    <FormControl component="fieldset" className={classes.formControl}>
+                                                        <FormLabel component="legend">Select Mode of Payment</FormLabel>
+                                                        <RadioGroup
+                                                            aria-label="Gender"
+                                                            name="gender1"
+                                                            className={classes.group}
+                                                            value={this.state.paymentId}
+                                                            onChange={this.paymentHandleChange}
+                                                        >
+                                                            {this.state.paymentModes.map((payment) => {
+                                                                return (
+                                                                    <FormControlLabel key={payment.id}
+                                                                                      value={""+ payment.id}
+                                                                                      defaultValue={payment.paymentName}
+                                                                                      control={<Radio/>}
+                                                                                      label={payment.paymentName}/>
+                                                                )
+                                                            })}
+                                                        </RadioGroup>
+                                                    </FormControl>
+                                                </div>
+                                            }
+                                            <div className={classes.actionsContainer}>
+                                                <div>
+                                                    <Button
+                                                        disabled={activeStep === 0}
+                                                        onClick={this.handleBack}
+                                                        className={classes.button}
+                                                    >
+                                                        Back
+                                                    </Button>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        onClick={this.handleNext}
+                                                        className={classes.button}
+                                                    >
+                                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </StepContent>
+                                    </Step>
+                                );
+                            })}
+                        </Stepper>
+
+                        <div className={this.state.orderPlaced}>
+                            {activeStep === steps.length && (
+                                <Paper square elevation={0} className={classes.resetContainer}>
+                                    <Typography>View the summary and place your order now!</Typography>
+                                    <Button onClick={this.handleReset} className={classes.button}>CHANGE</Button>
+                                </Paper>
+                            )}
+                        </div>
+                    </div>
 
                     <div className="orderSummary">
                         <Card style={{height: '100%'}}>
@@ -588,6 +628,7 @@ class Checkout extends Component {
                                         horizontal: 'left',
                                     }}
                                     open={this.state.open}
+                                    autoHideDuration={6000}
                                     onClose={this.handleClose}
                                     ContentProps={{
                                         'aria-describedby': 'message-id',
