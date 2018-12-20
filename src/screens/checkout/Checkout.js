@@ -158,7 +158,6 @@ class Checkout extends Component {
             let xhr1 = new XMLHttpRequest();
             let xhr2 = new XMLHttpRequest();
             let that = this;
-            console.log("baseurl : " + this.props.baseUrl + resourcePath);
             xhr.addEventListener("readystatechange", function () {
                 if (this.readyState === 4 && this.status === 200) {
                     that.setState({
@@ -279,7 +278,6 @@ class Checkout extends Component {
     };
 
     paymentHandleChange = event => {
-        console.log("payment handler.............")
         this.setState({paymentId: event.target.value});
     };
 
@@ -375,9 +373,6 @@ class Checkout extends Component {
                 "&bill=" + this.props.location.totalCartValue;
 
         }
-
-        console.log("order placed params : " + parameters);
-        console.log("order placed body : " + itemQuantities);
 
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4 && this.status === 200) {
