@@ -116,7 +116,8 @@ class Header extends Component {
 
     tabChangeHandler = (event, value) => {
         this.setState({
-            value
+            value: value,
+            errorResponse: ""
 
         });
     };
