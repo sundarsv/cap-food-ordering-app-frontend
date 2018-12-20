@@ -256,8 +256,6 @@ class Header extends Component {
         let xhrSignup = new XMLHttpRequest();
         let that = this;
 
-        console.log("baseurl : " + this.props.baseUrl + resourcePath);
-        console.log("signUp Data : " + dataSignup);
         xhrSignup.addEventListener("readystatechange", function () {
             if (this.readyState === 4 && this.status === 201) {
                 that.setState({
@@ -269,7 +267,6 @@ class Header extends Component {
                 });
             } else {
                 that.setState({errorResponse: this.responseText});
-                console.log(this.responseText);
             }
         });
 

@@ -158,7 +158,6 @@ class Checkout extends Component {
             let xhr1 = new XMLHttpRequest();
             let xhr2 = new XMLHttpRequest();
             let that = this;
-            console.log("baseurl : " + this.props.baseUrl + resourcePath);
             xhr.addEventListener("readystatechange", function () {
                 if (this.readyState === 4 && this.status === 200) {
                     that.setState({
@@ -279,7 +278,6 @@ class Checkout extends Component {
     };
 
     paymentHandleChange = event => {
-        console.log("payment handler.............")
         this.setState({paymentId: event.target.value});
     };
 
@@ -375,9 +373,6 @@ class Checkout extends Component {
                 "&bill=" + this.props.location.totalCartValue;
 
         }
-
-        console.log("order placed params : " + parameters);
-        console.log("order placed body : " + itemQuantities);
 
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -616,8 +611,8 @@ class Checkout extends Component {
                                             {item.type === 'Non-Veg' &&
                                             <FontAwesomeIcon icon="circle" className="non-veg-color"/>} {item.itemName}
                                         </div>
-                                        <div className="div-container"> {item.quantity}</div>
-                                        <div className="div-container"><FontAwesomeIcon icon="rupee-sign"/> {item.price}
+                                        <div className="div-container div-quantity"> {item.quantity}</div>
+                                        <div className="div-container div-value"><FontAwesomeIcon icon="rupee-sign"/> {item.price}
                                         </div>
                                     </div>
                                 ))}
@@ -625,11 +620,11 @@ class Checkout extends Component {
                                 <div className="body-container">
                                     <span style={{fontWeight: 'bold'}}
                                           className="div-container div-items">Net Amount </span>
-                                    <span className="rupee-container"><FontAwesomeIcon
+                                    <span className="rupee-container div-value"><FontAwesomeIcon
                                         icon="rupee-sign"/> {totalCartValue}</span>
                                 </div>
                                 <br/>
-                                <Button className="button-container" style={{marginLeft: '55px'}} variant="contained"
+                                <Button className="button-container" variant="contained"
                                         onClick={this.confirmOrderHandler} color="primary">
                                     Place Order
                                 </Button>
